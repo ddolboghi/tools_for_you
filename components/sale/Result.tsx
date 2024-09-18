@@ -39,10 +39,10 @@ export default function Result({
   const daesunPer = sumPercentages(percentages["Daesun"]);
   const lottePer = sumPercentages(percentages["Lotte"]);
 
-  let workers = "";
+  const workers = new Set<string>([]);
   let workerReportOfOrders = "";
   for (const order of Object.values(orders)) {
-    workers += `${order["name"]}, `;
+    workers.add(order["name"] as string);
     workerReportOfOrders += `${order["name"]}: ${
       order["goodDay"] || ""
     }t(좋은데이) / ${order["toctoc"] || ""}t(톡소다) / ${
@@ -50,9 +50,10 @@ export default function Result({
     }t(부산갈매기)\n`;
   }
 
+  const workersString = Array.from(workers).join(", ");
+
   let workerReportOfAdditionalOrders = "";
   for (const order of Object.values(additionalOrders)) {
-    workers += `${order["name"]}, `;
     workerReportOfAdditionalOrders += `${order["name"]}: ${
       order["goodDay"] || ""
     }t(좋은데이) / ${order["toctoc"] || ""}t(톡소다) / ${
@@ -121,7 +122,7 @@ export default function Result({
 마. 기타 0t (0%)\n
 2. 전환 및 추가주문
 가. 근무인원
-${workers}
+${workersString}
 나. 전환: ${orderSums[1] || 0}t(좋은데이) / ${orderSums[2] || 0}t(톡소다) / ${
     orderSums[3] || 0
   }t(부산갈매기)
@@ -151,7 +152,9 @@ C1: T - %
 새로: ${drink["Lotte"][1] || " "}T - ${percentages["Lotte"][1] || " "}%
 새로(살구): ${drink["Lotte"][2] || " "}T- ${percentages["Lotte"][2] || " "}%
 청하: ${drink["Lotte"][3] || " "}T - ${percentages["Lotte"][3] || " "}%
-갈매기 드시던 테이블까지 ${"n"}개입니다.`;
+갈매기 드시던 테이블까지 ${
+    drink["Muhak"][3] + orderSums[3] + additionalOrderSums[3]
+  }개입니다.`;
 
   const handleAllWriteClipboard = () => {
     if (

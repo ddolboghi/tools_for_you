@@ -267,7 +267,7 @@ C1: T - %
         <h2>2. 전환 및 추가주문</h2>
         <section>
           <h3>가. 근무인원</h3>
-          <p>{workers}</p>
+          <p>{workersString}</p>
         </section>
         <section>
           <h3>

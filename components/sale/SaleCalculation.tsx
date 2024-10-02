@@ -125,6 +125,8 @@ export default function SaleCalculation() {
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">총 방문업소: </h1>
         <input
+          type="number"
+          pattern="\d*"
           className="border border-gray-300 rounded p-1"
           placeholder="0"
           onChange={(e) => handleTotalBisness(e.target.value)}

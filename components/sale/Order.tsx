@@ -68,6 +68,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mr-2"
                 placeholder="0"
                 onChange={(e) =>
@@ -75,6 +77,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
@@ -82,6 +86,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
@@ -130,6 +136,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
@@ -141,6 +149,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
@@ -152,6 +162,8 @@ export default function Order({
                 }
               />
               <input
+                type="number"
+                pattern="\d*"
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>

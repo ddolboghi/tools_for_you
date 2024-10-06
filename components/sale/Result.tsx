@@ -23,7 +23,6 @@ export default function Result({
   const kstDate = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
   );
-  console.log(kstDate);
   const month = String(kstDate.getMonth() + 1).padStart(2, "");
   const day = String(kstDate.getDate()).padStart(2, "0");
   const dayOfWeek = translateToKoreanDayOfWeek(kstDate.getDay());
@@ -153,9 +152,8 @@ C1: T - %
 새로(살구): ${drink["Lotte"][2] || " "}T- ${percentages["Lotte"][2] || " "}%
 청하: ${drink["Lotte"][3] || " "}T - ${percentages["Lotte"][3] || " "}%
 갈매기 드시던 테이블까지 ${
-    drink["Muhak"][3] + orderSums[3] + additionalOrderSums[3]
+    drink["Muhak"][3] || 0 + orderSums[3] + additionalOrderSums[3]
   }개입니다.`;
-
   const handleAllWriteClipboard = () => {
     if (
       typeof window !== "undefined" &&

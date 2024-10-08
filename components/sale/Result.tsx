@@ -1,3 +1,5 @@
+"use client";
+
 import { translateToKoreanDayOfWeek } from "@/libs/dates";
 import { sumPercentages, sumTableNum } from "@/libs/sale";
 
@@ -133,7 +135,7 @@ ${workerReportOfAdditionalOrders}
 `;
 
   const smReport = `<이순조SM 퇴근보고>
-1.야간판촉지역
+1. 야간판촉지역
 광안 바닷가
 2. 야간 음용비
 좋은데이 : ${drink["Muhak"][1] || " "}T - ${percentages["Muhak"][1] || " "}%
@@ -149,7 +151,7 @@ ${workerReportOfAdditionalOrders}
 C1: T - %
 기타
 새로: ${drink["Lotte"][1] || " "}T - ${percentages["Lotte"][1] || " "}%
-새로(살구): ${drink["Lotte"][2] || " "}T- ${percentages["Lotte"][2] || " "}%
+새로(살구): ${drink["Lotte"][2] || " "}T - ${percentages["Lotte"][2] || " "}%
 청하: ${drink["Lotte"][3] || " "}T - ${percentages["Lotte"][3] || " "}%
 갈매기 드시던 테이블까지 ${
     drink["Muhak"][3] || 0 + orderSums[3] + additionalOrderSums[3]
@@ -262,6 +264,7 @@ C1: T - %
         <section>
           <h3>마. 기타 0t (0%)</h3>
         </section>
+        <br />
         <h2>2. 전환 및 추가주문</h2>
         <section>
           <h3>가. 근무인원</h3>
@@ -280,6 +283,7 @@ C1: T - %
             </p>
           ))}
         </section>
+        <br />
         <section>
           <h3>
             다. 추가주문: {additionalOrderSums[1] || 0}t(좋은데이) /{" "}
@@ -293,6 +297,68 @@ C1: T - %
               t(부산갈매기)
             </p>
           ))}
+        </section>
+      </div>
+      <div className="border border-blue-300">
+        <h1>
+          {"<"}이순조SM 퇴근보고{">"}
+        </h1>
+        <section>
+          <h1>1. 야간판촉지역</h1>
+          <p>광안 바닷가</p>
+        </section>
+        <section>
+          <h1>2. 야간 음용비</h1>
+          <p>
+            좋은데이 : {drink["Muhak"][1] || " "}T -{" "}
+            {percentages["Muhak"][1] || " "}%
+          </p>
+          <p>
+            좋은데이 톡시리즈 : {drink["Muhak"][2] || " "}T -{" "}
+            {percentages["Muhak"][2] || " "}%
+          </p>
+          <p>
+            갈매기 : {drink["Muhak"][3] || " "}T -{" "}
+            {percentages["Muhak"][2] || " "}%
+          </p>
+          <p>
+            대선 : {drink["Daesun"][1] || " "}T -{" "}
+            {percentages["Daesun"][1] || " "}%
+          </p>
+          <p>
+            강알리 : {drink["Daesun"][2] || " "}T -{" "}
+            {percentages["Daesun"][2] || " "}%
+          </p>
+          <p>
+            진로 : {drink["Hite"][2] || " "}T - {percentages["Hite"][2] || " "}%
+          </p>
+          <p>
+            진로(골드) : {drink["Hite"][3] || " "}T -{" "}
+            {percentages["Hite"][3] || " "}%
+          </p>
+          <p>
+            참이슬 : {drink["Hite"][1] || " "}T -{" "}
+            {percentages["Hite"][1] || " "}%
+          </p>
+          <p>C1: T - %</p>
+          <h2>기타</h2>
+          <p>
+            새로: {drink["Lotte"][1] || " "}T - {percentages["Lotte"][1] || " "}
+            %
+          </p>
+          <p>
+            새로(살구): {drink["Lotte"][2] || " "}T -{" "}
+            {percentages["Lotte"][2] || " "}%
+          </p>
+          <p>
+            청하: {drink["Lotte"][3] || " "}T - {percentages["Lotte"][3] || " "}
+            %
+          </p>
+          <p>
+            갈매기 드시던 테이블까지{" "}
+            {drink["Muhak"][3] || 0 + orderSums[3] + additionalOrderSums[3]}
+            개입니다.
+          </p>
         </section>
       </div>
       <button

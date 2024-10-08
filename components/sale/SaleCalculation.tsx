@@ -35,7 +35,6 @@ export default function SaleCalculation() {
     [key: number]: { [key: string]: number | string };
   }>({});
   const [orderCount, setOrderCount] = useState<number>(1);
-  const [additionalOrderCount, setAdditionalOrderCount] = useState<number>(1);
 
   const handleDrink = (company: string, index: number, value: string) => {
     setDrink((prev) => ({
@@ -71,6 +70,14 @@ export default function SaleCalculation() {
         [key]: key === "name" ? value : numValue,
       },
     }));
+
+    setAdditionalOrders((prev) => ({
+      ...prev,
+      [index]: {
+        ...prev[index],
+        [key]: key === "name" ? value : numValue,
+      },
+    }));
   };
 
   const addOrderLine = () => {
@@ -78,6 +85,12 @@ export default function SaleCalculation() {
       ...prev,
       [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
     }));
+
+    setAdditionalOrders((prev) => ({
+      ...prev,
+      [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
+    }));
+
     setOrderCount(orderCount + 1);
   };
 
@@ -86,6 +99,12 @@ export default function SaleCalculation() {
       const newOrders = { ...prev };
       delete newOrders[index];
       return newOrders;
+    });
+
+    setAdditionalOrders((prev) => {
+      const newAdditionalOrders = { ...prev };
+      delete newAdditionalOrders[index];
+      return newAdditionalOrders;
     });
   };
 
@@ -99,25 +118,12 @@ export default function SaleCalculation() {
       ...prev,
       [index]: {
         ...prev[index],
-        [key]: key === "name" ? value : numValue,
+        [key]:
+          key === "goodDay" || key === "toctoc" || key === "galmegi"
+            ? numValue
+            : 0,
       },
     }));
-  };
-
-  const addAdditionalOrderLine = () => {
-    setAdditionalOrders((prev) => ({
-      ...prev,
-      [additionalOrderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
-    }));
-    setAdditionalOrderCount(additionalOrderCount + 1);
-  };
-
-  const removeAdditionalOrderLine = (index: number) => {
-    setAdditionalOrders((prev) => {
-      const newAdditionalOrders = { ...prev };
-      delete newAdditionalOrders[index];
-      return newAdditionalOrders;
-    });
   };
 
   return (
@@ -150,8 +156,6 @@ export default function SaleCalculation() {
         addOrderLine={addOrderLine}
         removeOrderLine={removeOrderLine}
         handleAdditionalOrderChange={handleAdditionalOrderChange}
-        addAdditionalOrderLine={addAdditionalOrderLine}
-        removeAdditionalOrderLine={removeAdditionalOrderLine}
       />
       <button
         className="my-2 bg-blue-500 text-white rounded p-2 w-full"

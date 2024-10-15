@@ -76,50 +76,50 @@ export default function Result({
     additionalOrderSums[2] += Number(addi["toctoc"]) || 0;
     additionalOrderSums[3] += Number(addi["galmegi"]) || 0;
   }
-
+  console.log(percentages);
   const report = `<${month}월 ${day}일 ${dayOfWeek} 광안 상권보고>
 1. 점유비
 \u0020\u0020- 총 방문업소: ${totalBisness}개
 \u0020\u0020- 총 테이블 수: ${totalTableNum}t
 가. 무학 : ${muhakTotal}t (${muhakPer}%)
 \u0020\u0020- 좋은데이: ${drink["Muhak"][1] || " "}t (${
-    percentages["Muhak"][1] || " "
+    percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : " "
   }%)
 \u0020\u0020- 톡시리즈 : ${drink["Muhak"][2] || " "}t (${
-    percentages["Muhak"][2] || " "
+    percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : " "
   }%)
 \u0020\u0020- 부산갈매기 : ${drink["Muhak"][3] || " "}t (${
-    percentages["Muhak"][3] || " "
+    percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : " "
   }%)
 나. 하이트진로 : ${hiteTotal}t (${hitePer}%)
 \u0020\u0020- 참이슬 : ${drink["Hite"][1] || " "}t (${
-    percentages["Hite"][1] || " "
+    percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : " "
   }%)
 \u0020\u0020- 진로 : ${drink["Hite"][2] || " "}t (${
-    percentages["Hite"][2] || " "
+    percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : " "
   }%)
 \u0020\u0020- 기타(진로골드) : ${drink["Hite"][3] || " "}t (${
-    percentages["Hite"][3] || " "
+    percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : " "
   }%)
 다. 대선주조 : ${daesunTotal}t (${daesunPer}%)
 \u0020\u0020- 대선(C1포함) : ${drink["Daesun"][1] || " "}t (${
-    percentages["Daesun"][1] || " "
+    percentages["Daesun"][1] ? percentages["Daesun"][1].toFixed(1) : " "
   }%)
 \u0020\u0020- 강알리 : ${drink["Daesun"][2] || " "}t (${
-    percentages["Daesun"][2] || " "
+    percentages["Daesun"][2] ? percentages["Daesun"][2].toFixed(1) : " "
   }%)
 \u0020\u0020- 기타 : ${drink["Daesun"][3] || " "}t (${
-    percentages["Daesun"][3] || " "
+    percentages["Daesun"][3] ? percentages["Daesun"][3].toFixed(1) : " "
   }%)
 라. 롯데 : ${lotteTotal}t (${lottePer}%)
 \u0020\u0020- 새로: ${drink["Lotte"][1] || " "}t (${
-    percentages["Lotte"][1] || " "
+    percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : " "
   }%)
 \u0020\u0020- 새로(살구) : ${drink["Lotte"][2] || " "}t (${
-    percentages["Lotte"][2] || " "
+    percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : " "
   }%)
 \u0020\u0020- 청하(별빛청하 포함) : ${drink["Lotte"][3] || " "}t (${
-    percentages["Lotte"][3] || " "
+    percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : " "
   }%)
 마. 기타 0t (0%)\n
 2. 전환 및 추가주문
@@ -139,21 +139,42 @@ ${workerReportOfAdditionalOrders}
 1. 야간판촉지역
 광안 바닷가
 2. 야간 음용비
-좋은데이 : ${drink["Muhak"][1] || " "}T - ${percentages["Muhak"][1] || " "}%
-좋은데이 톡시리즈 : ${drink["Muhak"][2] || " "}T - ${
-    percentages["Muhak"][2] || " "
+좋은데이 : ${drink["Muhak"][1] || " "}T - ${
+    percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : " "
   }%
-갈매기 : ${drink["Muhak"][3] || " "}T - ${percentages["Muhak"][3] || " "}%
-대선 : ${drink["Daesun"][1] || " "}T - ${percentages["Daesun"][1] || " "}% 
-강알리 : ${drink["Daesun"][2] || " "}T - ${percentages["Daesun"][2] || " "}%
-진로 : ${drink["Hite"][2] || " "}T - ${percentages["Hite"][2] || " "}%
-진로(골드) : ${drink["Hite"][3] || " "}T - ${percentages["Hite"][3] || " "}%
-참이슬 : ${drink["Hite"][1] || " "}T - ${percentages["Hite"][1] || " "}%
+좋은데이 톡시리즈 : ${drink["Muhak"][2] || " "}T - ${
+    percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : " "
+  }%
+갈매기 : ${drink["Muhak"][3] || " "}T - ${
+    percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : " "
+  }%
+대선 : ${drink["Daesun"][1] || " "}T - ${
+    percentages["Daesun"][1] ? percentages["Daesun"][1].toFixed(1) : " "
+  }% 
+강알리 : ${drink["Daesun"][2] || " "}T - ${
+    percentages["Daesun"][2] ? percentages["Daesun"][2].toFixed(1) : " "
+  }%
+진로 : ${drink["Hite"][2] || " "}T - ${
+    percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : " "
+  }%
+진로(골드) : ${drink["Hite"][3] || " "}T - ${
+    percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : " "
+  }%
+참이슬 : ${drink["Hite"][1] || " "}T - ${
+    percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : " "
+  }%
 C1: T - %
 기타
-새로: ${drink["Lotte"][1] || " "}T - ${percentages["Lotte"][1] || " "}%
-새로(살구): ${drink["Lotte"][2] || " "}T - ${percentages["Lotte"][2] || " "}%
-청하: ${drink["Lotte"][3] || " "}T - ${percentages["Lotte"][3] || " "}%
+새로: ${drink["Lotte"][1] || " "}T - ${
+    percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : " "
+  }%
+새로(살구): ${drink["Lotte"][2] || " "}T - ${
+    percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : " "
+  }%
+청하: ${drink["Lotte"][3] || " "}T - ${
+    percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : " "
+  }%
+
 갈매기 드시던 테이블까지 ${
     drink["Muhak"][3] || 0 + orderSums[3] + additionalOrderSums[3]
   }개입니다.`;
@@ -195,17 +216,17 @@ C1: T - %
           </h3>
           <p>
             &nbsp;&nbsp;- 좋은데이: {drink["Muhak"][1] || 0}t (
-            {percentages["Muhak"][1] || 0}
+            {percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : 0}
             %)
           </p>
           <p>
             &nbsp;&nbsp;- 톡시리즈: {drink["Muhak"][2] || 0}t (
-            {percentages["Muhak"][2] || 0}
+            {percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : 0}
             %)
           </p>
           <p>
             &nbsp;&nbsp;- 부산갈매기: {drink["Muhak"][3] || 0}t (
-            {percentages["Muhak"][3].toFixed(1) || 0}%)
+            {percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : 0}%)
           </p>
         </section>
         <section>
@@ -214,15 +235,15 @@ C1: T - %
           </h3>
           <p>
             &nbsp;&nbsp;- 참이슬: {drink["Hite"][1] || 0}t (
-            {percentages["Hite"][1] || 0}%)
+            {percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : 0}%)
           </p>
           <p>
             &nbsp;&nbsp;- 진로: {drink["Hite"][2] || 0}t (
-            {percentages["Hite"][2] || 0}%)
+            {percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : 0}%)
           </p>
           <p>
             &nbsp;&nbsp;- 기타(진로 골드): {drink["Hite"][3] || 0}t (
-            {percentages["Hite"][3] || 0}%)
+            {percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : 0}%)
           </p>
         </section>
         <section>
@@ -231,16 +252,17 @@ C1: T - %
           </h3>
           <p>
             &nbsp;&nbsp;- 대선(C1포함): {drink["Daesun"][1] || 0}t (
-            {percentages["Daesun"][1] || 0}%)
+            {percentages["Daesun"][1] ? percentages["Daesun"][1].toFixed(1) : 0}
+            %)
           </p>
           <p>
             &nbsp;&nbsp;- 강알리: {drink["Daesun"][2] || 0}t (
-            {percentages["Daesun"][2] || 0}
+            {percentages["Daesun"][2] ? percentages["Daesun"][2].toFixed(1) : 0}
             %)
           </p>
           <p>
             &nbsp;&nbsp;- 기타: {drink["Daesun"][3] || 0}t (
-            {percentages["Daesun"][3] || 0}
+            {percentages["Daesun"][3] ? percentages["Daesun"][3].toFixed(1) : 0}
             %)
           </p>
         </section>
@@ -250,16 +272,15 @@ C1: T - %
           </h3>
           <p>
             &nbsp;&nbsp;- 새로: {drink["Lotte"][1] || 0}t (
-            {percentages["Lotte"][1] || 0}%)
+            {percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : 0}%)
           </p>
           <p>
             &nbsp;&nbsp;- 새로(살구): {drink["Lotte"][2] || 0}t (
-            {percentages["Lotte"][2] || 0}%)
+            {percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : 0}%)
           </p>
           <p>
             &nbsp;&nbsp;- 청하(별빛청하 포함): {drink["Lotte"][3] || 0}t (
-            {percentages["Lotte"][3] || 0}
-            %)
+            {percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : 0}%)
           </p>
         </section>
         <section>
@@ -312,49 +333,63 @@ C1: T - %
           <h1>2. 야간 음용비</h1>
           <p>
             좋은데이 : {drink["Muhak"][1] || " "}T -{" "}
-            {percentages["Muhak"][1] || " "}%
+            {percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : " "}
+            %
           </p>
           <p>
             좋은데이 톡시리즈 : {drink["Muhak"][2] || " "}T -{" "}
-            {percentages["Muhak"][2] || " "}%
+            {percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : " "}
+            %
           </p>
           <p>
             갈매기 : {drink["Muhak"][3] || " "}T -{" "}
-            {percentages["Muhak"][3] || " "}%
+            {percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : " "}
+            %
           </p>
           <p>
             대선 : {drink["Daesun"][1] || " "}T -{" "}
-            {percentages["Daesun"][1] || " "}%
+            {percentages["Daesun"][1]
+              ? percentages["Daesun"][1].toFixed(1)
+              : " "}
+            %
           </p>
           <p>
             강알리 : {drink["Daesun"][2] || " "}T -{" "}
-            {percentages["Daesun"][2] || " "}%
+            {percentages["Daesun"][2]
+              ? percentages["Daesun"][2].toFixed(1)
+              : " "}
+            %
           </p>
           <p>
-            진로 : {drink["Hite"][2] || " "}T - {percentages["Hite"][2] || " "}%
+            진로 : {drink["Hite"][2] || " "}T -{" "}
+            {percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : " "}%
           </p>
           <p>
             진로(골드) : {drink["Hite"][3] || " "}T -{" "}
-            {percentages["Hite"][3] || " "}%
+            {percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : " "}%
           </p>
           <p>
             참이슬 : {drink["Hite"][1] || " "}T -{" "}
-            {percentages["Hite"][1] || " "}%
+            {percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : " "}%
           </p>
           <p>C1: T - %</p>
           <h2>기타</h2>
           <p>
-            새로: {drink["Lotte"][1] || " "}T - {percentages["Lotte"][1] || " "}
+            새로: {drink["Lotte"][1] || " "}T -{" "}
+            {percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : " "}
             %
           </p>
           <p>
             새로(살구): {drink["Lotte"][2] || " "}T -{" "}
-            {percentages["Lotte"][2] || " "}%
-          </p>
-          <p>
-            청하: {drink["Lotte"][3] || " "}T - {percentages["Lotte"][3] || " "}
+            {percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : " "}
             %
           </p>
+          <p>
+            청하: {drink["Lotte"][3] || " "}T -{" "}
+            {percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : " "}
+            %
+          </p>
+          <br />
           <p>
             갈매기 드시던 테이블까지{" "}
             {drink["Muhak"][3] || 0 + orderSums[3] + additionalOrderSums[3]}

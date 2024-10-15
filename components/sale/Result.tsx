@@ -41,6 +41,7 @@ export default function Result({
   const lottePer = sumPercentages(percentages["Lotte"]);
 
   const workers = new Set<string>([]);
+
   let workerReportOfOrders = "";
   for (const order of Object.values(orders)) {
     workers.add(order["name"] as string);
@@ -142,7 +143,7 @@ ${workerReportOfAdditionalOrders}
 좋은데이 톡시리즈 : ${drink["Muhak"][2] || " "}T - ${
     percentages["Muhak"][2] || " "
   }%
-갈매기 : ${drink["Muhak"][3] || " "}T - ${percentages["Muhak"][2] || " "}%
+갈매기 : ${drink["Muhak"][3] || " "}T - ${percentages["Muhak"][3] || " "}%
 대선 : ${drink["Daesun"][1] || " "}T - ${percentages["Daesun"][1] || " "}% 
 강알리 : ${drink["Daesun"][2] || " "}T - ${percentages["Daesun"][2] || " "}%
 진로 : ${drink["Hite"][2] || " "}T - ${percentages["Hite"][2] || " "}%
@@ -204,7 +205,7 @@ C1: T - %
           </p>
           <p>
             &nbsp;&nbsp;- 부산갈매기: {drink["Muhak"][3] || 0}t (
-            {percentages["Muhak"][3] || 0}%)
+            {percentages["Muhak"][3].toFixed(1) || 0}%)
           </p>
         </section>
         <section>
@@ -319,7 +320,7 @@ C1: T - %
           </p>
           <p>
             갈매기 : {drink["Muhak"][3] || " "}T -{" "}
-            {percentages["Muhak"][2] || " "}%
+            {percentages["Muhak"][3] || " "}%
           </p>
           <p>
             대선 : {drink["Daesun"][1] || " "}T -{" "}

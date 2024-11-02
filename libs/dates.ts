@@ -16,3 +16,13 @@ export const translateToKoreanDayOfWeek = (dayOfweekNum: number) => {
       return "토요일";
   }
 };
+
+export const getReportDate = () => {
+  const kstDate = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+  );
+  const month = String(kstDate.getMonth() + 1).padStart(2, "");
+  const day = String(kstDate.getDate()).padStart(2, "0");
+  const dayOfWeek = translateToKoreanDayOfWeek(kstDate.getDay());
+  return `<${month}월 ${day}일 ${dayOfWeek} 광안 상권보고>`;
+};

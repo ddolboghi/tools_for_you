@@ -8,19 +8,16 @@ import Muhak from "./Muhak";
 import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale";
 import Result from "./Result";
 import Order from "./Order";
+import { AdditionalOrders, Drink, Orders, Percentages } from "@/utils/types";
 
 export default function SaleCalculation() {
-  const [drink, setDrink] = useState<{
-    [key: string]: { [key: number]: number };
-  }>({
+  const [drink, setDrink] = useState<Drink>({
     Muhak: {},
     Hite: {},
     Daesun: {},
     Lotte: {},
   });
-  const [percentages, setPercentages] = useState<{
-    [key: string]: { [key: number]: number };
-  }>({
+  const [percentages, setPercentages] = useState<Percentages>({
     Muhak: {},
     Hite: {},
     Daesun: {},
@@ -28,12 +25,10 @@ export default function SaleCalculation() {
   });
   const [showResult, setShowResult] = useState<boolean>(false);
   const [totalBisness, setTotalBisness] = useState<number>(0);
-  const [orders, setOrders] = useState<{
-    [key: number]: { [key: string]: number | string };
-  }>({});
-  const [additionalOrders, setAdditionalOrders] = useState<{
-    [key: number]: { [key: string]: number | string };
-  }>({});
+  const [orders, setOrders] = useState<Orders>({});
+  const [additionalOrders, setAdditionalOrders] = useState<AdditionalOrders>(
+    {}
+  );
   const [orderCount, setOrderCount] = useState<number>(1);
 
   const handleDrink = (company: string, index: number, value: string) => {
@@ -71,13 +66,15 @@ export default function SaleCalculation() {
       },
     }));
 
-    setAdditionalOrders((prev) => ({
-      ...prev,
-      [index]: {
-        ...prev[index],
-        [key]: key === "name" ? value : numValue,
-      },
-    }));
+    if (key === "name") {
+      setAdditionalOrders((prev) => ({
+        ...prev,
+        [index]: {
+          ...prev[index],
+          name: value,
+        },
+      }));
+    }
   };
 
   const addOrderLine = () => {

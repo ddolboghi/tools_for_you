@@ -1,12 +1,10 @@
 "use client";
 
+import { AdditionalOrders, Orders } from "@/utils/types";
+
 type OrderProps = {
-  orders: {
-    [key: number]: { [key: string]: number | string };
-  };
-  additionalOrders: {
-    [key: number]: { [key: string]: number | string };
-  };
+  orders: Orders;
+  additionalOrders: AdditionalOrders;
   handleOrderChange: (index: number, key: string, value: string) => void;
   addOrderLine: () => void;
   removeOrderLine: (index: number) => void;
@@ -179,12 +177,6 @@ export default function Order({
             </div>
           ))}
         </div>
-        {/* <button
-          className="bg-blue-500 text-white rounded p-2"
-          onClick={addAdditionalOrderLine}
-        >
-          인원 추가하기
-        </button> */}
       </section>
     </div>
   );

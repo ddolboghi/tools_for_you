@@ -1,6 +1,6 @@
 "use client";
 
-import { AdditionalOrders, Orders } from "@/utils/types";
+import { AdditionalOrders, Orders } from "@/utils/sale/types";
 
 type OrderProps = {
   orders: Orders;

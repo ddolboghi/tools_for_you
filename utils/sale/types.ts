@@ -10,6 +10,12 @@ type OrdersDataType = {
   [key: number]: { [key: string]: number | string };
 };
 
+export type OrderSums = {
+  1: number;
+  2: number;
+  3: number;
+};
+
 export type Orders = OrdersDataType;
 
 export type AdditionalOrders = OrdersDataType;

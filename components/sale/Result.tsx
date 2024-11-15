@@ -1,50 +1,38 @@
 "use client";
-import { getReportDate } from "@/libs/dates";
-import { getReport } from "@/libs/reports";
+
 import {
-  getAdditionalOrderSums,
-  getOrderSums,
-  sumPercentages,
-  sumTableNum,
-} from "@/libs/sale";
-import { AdditionalOrders, Drink, Orders, Percentages } from "@/utils/types";
+  getReport,
+  getReportPercentages,
+  getReportTables,
+  getReportTitle,
+  getTotalGalmegi,
+} from "@/libs/sale/reports";
+import { getAdditionalOrderSums, getOrderSums } from "@/libs/sale/sale";
+import {
+  AdditionalOrders,
+  Drink,
+  Orders,
+  Percentages,
+} from "@/utils/sale/types";
 import { useMemo } from "react";
 
 type ResultProps = {
   drink: Drink;
   percentages: Percentages;
   totalBisness: number;
+  selectedBusinessZone: string;
   orders: Orders;
   additionalOrders: AdditionalOrders;
 };
-
-const calculateTotals = (drink: Drink) => ({
-  muhak: sumTableNum(drink["Muhak"]),
-  hite: sumTableNum(drink["Hite"]),
-  daesun: sumTableNum(drink["Daesun"]),
-  lotte: sumTableNum(drink["Lotte"]),
-});
-
-const calculatePercentages = (percentages: Percentages) => ({
-  muhak: sumPercentages(percentages["Muhak"]),
-  hite: sumPercentages(percentages["Hite"]),
-  daesun: sumPercentages(percentages["Daesun"]),
-  lotte: sumPercentages(percentages["Lotte"]),
-});
 
 export default function Result({
   drink,
   percentages,
   totalBisness,
+  selectedBusinessZone,
   orders,
   additionalOrders,
 }: ResultProps) {
-  const brandTotals = useMemo(() => calculateTotals(drink), [drink]);
-  const brandPercentages = useMemo(
-    () => calculatePercentages(percentages),
-    [percentages]
-  );
-
   const workerNames = useMemo(
     () =>
       Object.values(orders)
@@ -66,10 +54,18 @@ export default function Result({
         drink,
         percentages,
         totalBisness,
+        selectedBusinessZone,
         orders,
         additionalOrders
       ),
-    [drink, percentages, totalBisness, orders, additionalOrders]
+    [
+      drink,
+      percentages,
+      totalBisness,
+      selectedBusinessZone,
+      orders,
+      additionalOrders,
+    ]
   );
 
   const smReport = useMemo(
@@ -79,11 +75,31 @@ export default function Result({
         drink,
         percentages,
         totalBisness,
+        selectedBusinessZone,
         orders,
         additionalOrders
       ),
-    [drink, percentages, totalBisness, orders, additionalOrders]
+    [
+      drink,
+      percentages,
+      totalBisness,
+      selectedBusinessZone,
+      orders,
+      additionalOrders,
+    ]
   );
+
+  const reportTable = useMemo(() => getReportTables(drink), [drink]);
+  const reportPercentages = useMemo(
+    () => getReportPercentages(percentages),
+    [percentages]
+  );
+
+  const totalGalmegi = useMemo(
+    () => getTotalGalmegi(drink, orders, additionalOrders),
+    [drink, orders, additionalOrders]
+  );
+
   const handleBSKYReportClipboard = () => {
     if (
       typeof window !== "undefined" &&
@@ -109,84 +125,81 @@ export default function Result({
   return (
     <div>
       <div className="border border-blue-300">
-        <h1>{getReportDate()}</h1>
+        <h1>{getReportTitle(selectedBusinessZone)}</h1>
         <h2>1. 점유비</h2>
         <p>&nbsp;&nbsp;- 총 방문업소: {totalBisness}</p>
-        <p>
-          &nbsp;&nbsp;- 총 테이블 수:{" "}
-          {Object.values(brandTotals).reduce((acc, cur) => acc + cur, 0)}t
-        </p>
+        <p>&nbsp;&nbsp;- 총 테이블 수: {reportTable.sum.total}t</p>
         <section>
           <h3>
-            가. 무학: {brandTotals.muhak}t ({brandPercentages.muhak}%)
+            가. 무학: {reportTable.sum.muhak}t ({reportPercentages.sum.muhak}%)
           </h3>
           <p>
-            &nbsp;&nbsp;- 좋은데이: {drink["Muhak"][1] || 0}t (
-            {percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : 0}
+            &nbsp;&nbsp;- 좋은데이: {reportTable.goodDay}t (
+            {reportPercentages.goodDay}
             %)
           </p>
           <p>
-            &nbsp;&nbsp;- 톡시리즈: {drink["Muhak"][2] || 0}t (
-            {percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : 0}
+            &nbsp;&nbsp;- 톡시리즈: {reportTable.toc}t ({reportPercentages.toc}
             %)
           </p>
           <p>
-            &nbsp;&nbsp;- 부산갈매기: {drink["Muhak"][3] || 0}t (
-            {percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 부산갈매기: {reportTable.galmegi}t (
+            {reportPercentages.galmegi}%)
           </p>
         </section>
         <section>
           <h3>
-            나. 하이트진로: {brandTotals.hite}t ({brandPercentages.hite}%)
+            나. 하이트진로: {reportTable.sum.hitejinro}t (
+            {reportPercentages.sum.hitejinro}%)
           </h3>
           <p>
-            &nbsp;&nbsp;- 참이슬: {drink["Hite"][1] || 0}t (
-            {percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 참이슬: {reportTable.chamisul}t (
+            {reportPercentages.chamisul}%)
           </p>
           <p>
-            &nbsp;&nbsp;- 진로: {drink["Hite"][2] || 0}t (
-            {percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 진로: {reportTable.jinro}t ({reportPercentages.jinro}
+            %)
           </p>
           <p>
-            &nbsp;&nbsp;- 기타(진로 골드): {drink["Hite"][3] || 0}t (
-            {percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 기타(진로 골드): {reportTable.jinrogold}t (
+            {reportPercentages.jinrogold}%)
           </p>
         </section>
         <section>
           <h3>
-            다. 대선주조: {brandTotals.daesun}t ({brandPercentages.daesun}%)
+            다. 대선주조: {reportTable.sum.daesunjujo}t (
+            {reportPercentages.sum.daesunjujo}%)
           </h3>
           <p>
-            &nbsp;&nbsp;- 대선(C1포함): {drink["Daesun"][1] || 0}t (
-            {percentages["Daesun"][1] ? percentages["Daesun"][1].toFixed(1) : 0}
+            &nbsp;&nbsp;- 대선(C1포함): {reportTable.daesun}t (
+            {reportPercentages.daesun}
             %)
           </p>
           <p>
-            &nbsp;&nbsp;- 강알리: {drink["Daesun"][2] || 0}t (
-            {percentages["Daesun"][2] ? percentages["Daesun"][2].toFixed(1) : 0}
+            &nbsp;&nbsp;- 강알리: {reportTable.gangali}t (
+            {reportPercentages.gangali}
             %)
           </p>
           <p>
-            &nbsp;&nbsp;- 기타: {drink["Daesun"][3] || 0}t (
-            {percentages["Daesun"][3] ? percentages["Daesun"][3].toFixed(1) : 0}
+            &nbsp;&nbsp;- 기타: {reportTable.daesunEtc}t (
+            {reportPercentages.daesunEtc}
             %)
           </p>
         </section>
         <section>
           <h3>
-            라. 롯데: {brandTotals.lotte}t ({brandPercentages.lotte}%)
+            라. 롯데: {reportTable.sum.lotte}t ({reportPercentages.sum.lotte}%)
           </h3>
           <p>
-            &nbsp;&nbsp;- 새로: {drink["Lotte"][1] || 0}t (
-            {percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 새로: {reportTable.sero}t ({reportPercentages.sero}%)
           </p>
           <p>
-            &nbsp;&nbsp;- 새로(살구): {drink["Lotte"][2] || 0}t (
-            {percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 새로(살구): {reportTable.serosalgu}t (
+            {reportPercentages.serosalgu}%)
           </p>
           <p>
-            &nbsp;&nbsp;- 청하(별빛청하 포함): {drink["Lotte"][3] || 0}t (
-            {percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : 0}%)
+            &nbsp;&nbsp;- 청하(별빛청하 포함): {reportTable.chungha}t (
+            {reportPercentages.chungha}%)
           </p>
         </section>
         <section>
@@ -227,94 +240,73 @@ export default function Result({
           ))}
         </section>
       </div>
-      <div className="border border-blue-300">
-        <h1>
-          {"<"}이순조SM 퇴근보고{">"}
-        </h1>
-        <section>
-          <h1>1. 야간판촉지역</h1>
-          <p>광안 바닷가</p>
-        </section>
-        <section>
-          <h1>2. 야간 음용비</h1>
-          <p>
-            좋은데이 : {drink["Muhak"][1] || " "}T -{" "}
-            {percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : " "}
-            %
-          </p>
-          <p>
-            좋은데이 톡시리즈 : {drink["Muhak"][2] || " "}T -{" "}
-            {percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : " "}
-            %
-          </p>
-          <p>
-            갈매기 : {drink["Muhak"][3] || " "}T -{" "}
-            {percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : " "}
-            %
-          </p>
-          <p>
-            대선 : {drink["Daesun"][1] || " "}T -{" "}
-            {percentages["Daesun"][1]
-              ? percentages["Daesun"][1].toFixed(1)
-              : " "}
-            %
-          </p>
-          <p>
-            강알리 : {drink["Daesun"][2] || " "}T -{" "}
-            {percentages["Daesun"][2]
-              ? percentages["Daesun"][2].toFixed(1)
-              : " "}
-            %
-          </p>
-          <p>
-            진로 : {drink["Hite"][2] || " "}T -{" "}
-            {percentages["Hite"][2] ? percentages["Hite"][2].toFixed(1) : " "}%
-          </p>
-          <p>
-            진로(골드) : {drink["Hite"][3] || " "}T -{" "}
-            {percentages["Hite"][3] ? percentages["Hite"][3].toFixed(1) : " "}%
-          </p>
-          <p>
-            참이슬 : {drink["Hite"][1] || " "}T -{" "}
-            {percentages["Hite"][1] ? percentages["Hite"][1].toFixed(1) : " "}%
-          </p>
-          <p>C1: T - %</p>
-          <h2>기타</h2>
-          <p>
-            새로: {drink["Lotte"][1] || " "}T -{" "}
-            {percentages["Lotte"][1] ? percentages["Lotte"][1].toFixed(1) : " "}
-            %
-          </p>
-          <p>
-            새로(살구): {drink["Lotte"][2] || " "}T -{" "}
-            {percentages["Lotte"][2] ? percentages["Lotte"][2].toFixed(1) : " "}
-            %
-          </p>
-          <p>
-            청하: {drink["Lotte"][3] || " "}T -{" "}
-            {percentages["Lotte"][3] ? percentages["Lotte"][3].toFixed(1) : " "}
-            %
-          </p>
-          <br />
-          <p>
-            갈매기 드시던 테이블까지{" "}
-            {(drink["Muhak"][3] || 0) + orderSums[3] + additionalOrderSums[3]}
-            개입니다.
-          </p>
-        </section>
-      </div>
+      {selectedBusinessZone === "광안" && (
+        <div className="border border-blue-300">
+          <h1>
+            {"<"}이순조SM 퇴근보고{">"}
+          </h1>
+          <section>
+            <h1>1. 야간판촉지역</h1>
+            <p>광안 바닷가</p>
+          </section>
+          <section>
+            <h1>2. 야간 음용비</h1>
+            <p>
+              좋은데이 : {reportTable.goodDay}T - {reportPercentages.goodDay}%
+            </p>
+            <p>
+              좋은데이 톡시리즈 : {reportTable.toc}T - {reportPercentages.toc}%
+            </p>
+            <p>
+              갈매기 : {reportTable.galmegi}T - {reportPercentages.galmegi}%
+            </p>
+            <p>
+              대선 : {reportTable.daesun}T - {reportPercentages.daesun}%
+            </p>
+            <p>
+              강알리 : {reportTable.gangali}T - {reportPercentages.gangali}%
+            </p>
+            <p>
+              진로 : {reportTable.jinro}T - {reportPercentages.jinro}%
+            </p>
+            <p>
+              진로(골드) : {reportTable.jinrogold}T -{" "}
+              {reportPercentages.jinrogold}%
+            </p>
+            <p>
+              참이슬 : {reportTable.chamisul}T - {reportPercentages.chamisul}%
+            </p>
+            <p>C1: T - %</p>
+            <h2>기타</h2>
+            <p>
+              새로: {reportTable.sero}T - {reportPercentages.sero}% %
+            </p>
+            <p>
+              새로(살구): {reportTable.serosalgu}T -{" "}
+              {reportPercentages.serosalgu}%
+            </p>
+            <p>
+              청하: {reportTable.chungha}T - {reportPercentages.chungha}%
+            </p>
+            <br />
+            <p>갈매기 드시던 테이블까지 {totalGalmegi}개입니다.</p>
+          </section>
+        </div>
+      )}
       <button
         className="my-2 bg-blue-500 text-white rounded p-2 w-full"
         onClick={handleBSKYReportClipboard}
       >
-        수영구 톡방용 보고 복사하기
+        상권 톡방용 보고 복사하기
       </button>
-      <button
-        className="my-2 bg-green-400 text-white rounded p-2 w-full"
-        onClick={handleSMReportClipboard}
-      >
-        담당자님용 보고 복사하기
-      </button>
+      {selectedBusinessZone === "광안" && (
+        <button
+          className="my-2 bg-green-400 text-white rounded p-2 w-full"
+          onClick={handleSMReportClipboard}
+        >
+          담당자님용 보고 복사하기
+        </button>
+      )}
     </div>
   );
 }

@@ -5,10 +5,17 @@ import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
 import Muhak from "./Muhak";
-import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale";
+import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
-import { AdditionalOrders, Drink, Orders, Percentages } from "@/utils/types";
+import {
+  AdditionalOrders,
+  Drink,
+  Orders,
+  Percentages,
+} from "@/utils/sale/types";
+import BusinessZoneSelector from "./BusinessZoneSelector";
+import { businessZones } from "@/utils/sale/businessZones";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -30,6 +37,9 @@ export default function SaleCalculation() {
     {}
   );
   const [orderCount, setOrderCount] = useState<number>(1);
+  const [selectedBusinessZone, setSelectedBusinessZone] = useState<string>(
+    businessZones[0].name
+  );
 
   const handleDrink = (company: string, index: number, value: string) => {
     setDrink((prev) => ({
@@ -136,6 +146,13 @@ export default function SaleCalculation() {
         />
         <span>개</span>
       </section>
+      <section className="flex flex-row mb-4 items-center">
+        <h1 className="text-lg pr-2">상권 선택: </h1>
+        <BusinessZoneSelector
+          selectedBusinessZone={selectedBusinessZone}
+          onSelectBusinessZone={setSelectedBusinessZone}
+        />
+      </section>
       <Muhak
         handleDrink={(index, value) => handleDrink("Muhak", index, value)}
       />
@@ -163,6 +180,7 @@ export default function SaleCalculation() {
       {showResult && (
         <Result
           totalBisness={totalBisness}
+          selectedBusinessZone={selectedBusinessZone}
           drink={drink}
           percentages={percentages}
           orders={orders}

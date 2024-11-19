@@ -50,12 +50,18 @@ export const calculateAdjustedPercentages = (
     });
     allPercentages.sort((a, b) => a[2] - b[2]);
 
-    // 가장 작은 값부터 0.1씩 더하기
+    // 가장 작은 값부터 +-0.1 더하기
     let i = 0;
     while (Math.abs(diff) > 0.001) {
       // 부동소수점 오차를 고려한 종료 조건
       const [company, index, value] = allPercentages[i % allPercentages.length];
-      const adjustment = diff > 0 ? 0.1 : -0.1;
+
+      let adjustment = 0;
+      if (diff > 0) {
+        adjustment = 0.1;
+      } else if (diff < 0) {
+        adjustment = -0.1;
+      }
 
       newPercentages[company][index] += adjustment;
       newPercentages[company][index] =

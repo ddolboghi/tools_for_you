@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
@@ -51,17 +51,17 @@ export default function SaleCalculation() {
     }));
   };
 
-  const muhakTotal = sumTableNum(drink["Muhak"]);
-  const hiteTotal = sumTableNum(drink["Hite"]);
-  const daesunTotal = sumTableNum(drink["Daesun"]);
-  const lotteTotal = sumTableNum(drink["Lotte"]);
-  const tableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
-
   const handleTotalBisness = (value: string) => {
     setTotalBisness(Number(value));
   };
 
-  const handleCalculateBtn = () => {
+  const handleCalculateBtn = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const muhakTotal = sumTableNum(drink["Muhak"]);
+    const hiteTotal = sumTableNum(drink["Hite"]);
+    const daesunTotal = sumTableNum(drink["Daesun"]);
+    const lotteTotal = sumTableNum(drink["Lotte"]);
+    const tableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
     setPercentages(calculateAdjustedPercentages(drink, tableNum));
     setShowResult(true);
   };
@@ -153,30 +153,34 @@ export default function SaleCalculation() {
           onSelectBusinessZone={setSelectedBusinessZone}
         />
       </section>
-      <Muhak
-        handleDrink={(index, value) => handleDrink("Muhak", index, value)}
-      />
-      <Hite handleDrink={(index, value) => handleDrink("Hite", index, value)} />
-      <Daesun
-        handleDrink={(index, value) => handleDrink("Daesun", index, value)}
-      />
-      <Lotte
-        handleDrink={(index, value) => handleDrink("Lotte", index, value)}
-      />
-      <Order
-        orders={orders}
-        additionalOrders={additionalOrders}
-        handleOrderChange={handleOrderChange}
-        addOrderLine={addOrderLine}
-        removeOrderLine={removeOrderLine}
-        handleAdditionalOrderChange={handleAdditionalOrderChange}
-      />
-      <button
-        className="my-2 bg-blue-500 text-white rounded p-2 w-full"
-        onClick={handleCalculateBtn}
-      >
-        계산하기
-      </button>
+      <form onSubmit={(e) => handleCalculateBtn(e)}>
+        <Muhak
+          handleDrink={(index, value) => handleDrink("Muhak", index, value)}
+        />
+        <Hite
+          handleDrink={(index, value) => handleDrink("Hite", index, value)}
+        />
+        <Daesun
+          handleDrink={(index, value) => handleDrink("Daesun", index, value)}
+        />
+        <Lotte
+          handleDrink={(index, value) => handleDrink("Lotte", index, value)}
+        />
+        <Order
+          orders={orders}
+          additionalOrders={additionalOrders}
+          handleOrderChange={handleOrderChange}
+          addOrderLine={addOrderLine}
+          removeOrderLine={removeOrderLine}
+          handleAdditionalOrderChange={handleAdditionalOrderChange}
+        />
+        <button
+          type="submit"
+          className="my-2 bg-blue-500 text-white rounded p-2 w-full"
+        >
+          계산하기
+        </button>
+      </form>
       {showResult && (
         <Result
           totalBisness={totalBisness}

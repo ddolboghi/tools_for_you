@@ -31,17 +31,19 @@ export const calculateAdjustedPercentages = (
   Object.entries(drink).forEach(([company, values]) => {
     newPercentages[company] = {};
     Object.entries(values).forEach(([index, value]) => {
-      const percentage = (value / tableNum) * 100;
-      const roundedPercentage = Math.round(percentage * 10) / 10;
-      newPercentages[company][Number(index)] = roundedPercentage;
-      totalPercentage += roundedPercentage;
+      if (value > 0) {
+        const percentage = (value / tableNum) * 100;
+        const roundedPercentage = Math.round(percentage * 10) / 10;
+        newPercentages[company][Number(index)] = roundedPercentage;
+        totalPercentage += roundedPercentage;
+      }
     });
   });
 
   // 총합이 100이 아닌 경우 조정
   let diff = (1000 - totalPercentage * 10) / 10;
   if (diff !== 0) {
-    // 모든 퍼센티지를 배열로 변환하고 오름차순으로 정렬
+    // 구조를 배열로 변환하고 주류 개수를 기준으로 오름차순 정렬
     const allPercentages: [string, number, number][] = [];
     Object.entries(newPercentages).forEach(([company, values]) => {
       Object.entries(values).forEach(([index, value]) => {
@@ -54,7 +56,7 @@ export const calculateAdjustedPercentages = (
     let i = 0;
     while (Math.abs(diff) > 0.001) {
       // 부동소수점 오차를 고려한 종료 조건
-      const [company, index, value] = allPercentages[i % allPercentages.length];
+      const [company, index] = allPercentages[i % allPercentages.length];
 
       let adjustment = 0;
       if (diff > 0) {

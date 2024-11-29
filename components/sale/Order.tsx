@@ -1,20 +1,21 @@
 "use client";
 
-import { getOrderSums } from "@/libs/sale/sale";
-import { AdditionalOrders, Orders } from "@/utils/sale/types";
-import { useMemo, useState } from "react";
+import { Orders, OrderSums } from "@/utils/sale/types";
 
 type OrderProps = {
   orders: Orders;
-  additionalOrders: AdditionalOrders;
-  handleOrderChange: (index: number, key: string, value: string) => void;
-  addOrderLine: (onSplit: boolean) => void;
+  additionalOrders: Orders;
+  handleOrderChange: (index: number, key: number, value: string) => void;
+  addOrderLine: () => void;
   removeOrderLine: (index: number) => void;
   handleAdditionalOrderChange: (
     index: number,
-    key: string,
+    key: number,
     value: string
   ) => void;
+  onSplit: boolean;
+  orderSums: OrderSums;
+  additionalOrderSums: OrderSums;
 };
 
 export default function Order({
@@ -24,24 +25,10 @@ export default function Order({
   addOrderLine,
   removeOrderLine,
   handleAdditionalOrderChange,
+  onSplit,
+  orderSums,
+  additionalOrderSums,
 }: OrderProps) {
-  const [onSplit, setOnSplit] = useState(false);
-
-  const orderSums = useMemo(() => getOrderSums(orders), [orders]);
-
-  const additionalOrderSums = useMemo(
-    () => getOrderSums(additionalOrders),
-    [additionalOrders]
-  );
-
-  const handleGalmegiSplit = () => {
-    setOnSplit(!onSplit);
-  };
-
-  const handleAddWorker = () => {
-    addOrderLine(onSplit);
-  };
-  console.log(additionalOrderSums);
   return (
     <div className="border border-gray-300 rounded p-4">
       <div className="flex flex-row justify-start items-center gap-3">
@@ -49,16 +36,9 @@ export default function Order({
         <button
           type="button"
           className="bg-blue-500 text-white rounded p-2"
-          onClick={handleAddWorker}
+          onClick={addOrderLine}
         >
           인원 추가하기
-        </button>
-        <button
-          type="button"
-          className="bg-blue-500 text-white rounded"
-          onClick={handleGalmegiSplit}
-        >
-          갈매기 19,16 나누기
         </button>
       </div>
       <section className="mb-4 text-sm">
@@ -92,9 +72,9 @@ export default function Order({
               <input
                 className="border border-gray-300 rounded p-1 w-1/4 mr-2"
                 placeholder="이름"
-                value={orders[Number(key)]["name"] || ""}
+                value={orders[Number(key)][0] || ""}
                 onChange={(e) =>
-                  handleOrderChange(Number(key), "name", e.target.value)
+                  handleOrderChange(Number(key), 0, e.target.value)
                 }
               />
               <input
@@ -103,7 +83,7 @@ export default function Order({
                 className="border border-gray-300 rounded p-1 w-1/4 mr-2"
                 placeholder="0"
                 onChange={(e) =>
-                  handleOrderChange(Number(key), "goodDay", e.target.value)
+                  handleOrderChange(Number(key), 1, e.target.value)
                 }
               />
               <input
@@ -112,7 +92,7 @@ export default function Order({
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
-                  handleOrderChange(Number(key), "toc", e.target.value)
+                  handleOrderChange(Number(key), 2, e.target.value)
                 }
               />
               {onSplit ? (
@@ -123,11 +103,7 @@ export default function Order({
                     className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                     placeholder="0"
                     onChange={(e) =>
-                      handleOrderChange(
-                        Number(key),
-                        "galmegi19",
-                        e.target.value
-                      )
+                      handleOrderChange(Number(key), 3, e.target.value)
                     }
                   />
                   <input
@@ -136,11 +112,7 @@ export default function Order({
                     className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                     placeholder="0"
                     onChange={(e) =>
-                      handleOrderChange(
-                        Number(key),
-                        "galmegi16",
-                        e.target.value
-                      )
+                      handleOrderChange(Number(key), 4, e.target.value)
                     }
                   />
                 </>
@@ -151,7 +123,7 @@ export default function Order({
                   className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                   placeholder="0"
                   onChange={(e) =>
-                    handleOrderChange(Number(key), "galmegi", e.target.value)
+                    handleOrderChange(Number(key), 3, e.target.value)
                   }
                 />
               )}
@@ -199,9 +171,9 @@ export default function Order({
               <input
                 className="border border-gray-300 rounded p-1 w-1/4 mr-2"
                 placeholder="이름"
-                value={orders[Number(key)]["name"] || ""}
+                value={orders[Number(key)][0] || ""}
                 onChange={(e) =>
-                  handleOrderChange(Number(key), "name", e.target.value)
+                  handleOrderChange(Number(key), 0, e.target.value)
                 }
               />
               <input
@@ -210,11 +182,7 @@ export default function Order({
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
-                  handleAdditionalOrderChange(
-                    Number(key),
-                    "goodDay",
-                    e.target.value
-                  )
+                  handleAdditionalOrderChange(Number(key), 1, e.target.value)
                 }
               />
               <input
@@ -223,11 +191,7 @@ export default function Order({
                 className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                 placeholder="0"
                 onChange={(e) =>
-                  handleAdditionalOrderChange(
-                    Number(key),
-                    "toc",
-                    e.target.value
-                  )
+                  handleAdditionalOrderChange(Number(key), 2, e.target.value)
                 }
               />
               {onSplit ? (
@@ -240,7 +204,7 @@ export default function Order({
                     onChange={(e) =>
                       handleAdditionalOrderChange(
                         Number(key),
-                        "galmegi19",
+                        3,
                         e.target.value
                       )
                     }
@@ -253,7 +217,7 @@ export default function Order({
                     onChange={(e) =>
                       handleAdditionalOrderChange(
                         Number(key),
-                        "galmegi16",
+                        4,
                         e.target.value
                       )
                     }
@@ -266,11 +230,7 @@ export default function Order({
                   className="border border-gray-300 rounded p-1 w-1/4 mx-2"
                   placeholder="0"
                   onChange={(e) =>
-                    handleAdditionalOrderChange(
-                      Number(key),
-                      "galmegi",
-                      e.target.value
-                    )
+                    handleAdditionalOrderChange(Number(key), 3, e.target.value)
                   }
                 />
               )}

@@ -6,24 +6,13 @@ export type Percentages = {
   [key: string]: { [key: number]: number };
 };
 
-type OrderItem = {
-  name: string;
-  goodDay: number;
-  toc: number;
-} & (
-  | { galmegi: number; galmegi19?: never; galmegi16?: never }
-  | { galmegi?: never; galmegi19: number; galmegi16: number }
-);
-
 type OrdersDataType = {
-  [key: number]: OrderItem;
+  [key: number]: { [key: number]: number | string };
 };
-
-export type OrderSums = { [key: number]: number };
 
 export type Orders = OrdersDataType;
 
-export type AdditionalOrders = OrdersDataType;
+export type OrderSums = { [key: number]: number };
 
 type ReportBase = {
   sum: {

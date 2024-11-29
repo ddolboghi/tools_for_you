@@ -17,7 +17,6 @@ export default function OrderResult({
   orderSums,
   additionalOrderSums,
 }: OrderResultProps) {
-  console.log(orderSums, additionalOrderSums);
   if (onSplit) {
     return (
       <section>

@@ -18,6 +18,7 @@ import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
 import { businessZones } from "@/utils/sale/businessZones";
 import { initOrder, initOrderWithGamlegi16 } from "@/data/sale/order";
+import GalmegiSplitSwitch from "./GalmegiSplitSwitch";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -165,7 +166,7 @@ export default function SaleCalculation() {
   };
 
   return (
-    <div className="p-4">
+    <div className={`p-4 ${onSplit && "bg-neutral-950 text-white"}`}>
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">총 방문업소: </h1>
         <input
@@ -184,15 +185,13 @@ export default function SaleCalculation() {
           onSelectBusinessZone={setSelectedBusinessZone}
         />
       </section>
-      <button
-        type="button"
-        className="bg-blue-500 text-white rounded"
-        onClick={handleGalmegiSplit}
-      >
-        갈매기 19,16 나누기
-      </button>
+      <GalmegiSplitSwitch
+        onSplit={onSplit}
+        handleGalmegiSplit={handleGalmegiSplit}
+      />
       <form onSubmit={(e) => handleCalculateBtn(e)}>
         <Muhak
+          onSplit={onSplit}
           handleDrink={(index, value) => handleDrink("Muhak", index, value)}
         />
         <Hite

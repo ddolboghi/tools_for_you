@@ -5,17 +5,16 @@ import {
   getReportPercentages,
   getReportTables,
   getReportTitle,
-  getTotalGalmegi,
 } from "@/libs/sale/reports";
-import {
-  Drink,
-  isReportWithGalmegi16,
-  Orders,
-  OrderSums,
-  Percentages,
-} from "@/utils/sale/types";
+import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
+import {
+  getGalmegiSums,
+  getProviderPercentages,
+  getProviderSums,
+} from "@/libs/sale/sale";
+import SMGalmegiSummary from "./report/SMGalmegiSummary";
 
 type ResultProps = {
   onSplit: boolean;
@@ -40,7 +39,6 @@ export default function Result({
   orderSums,
   additionalOrderSums,
 }: ResultProps) {
-  const hasGalmegi16 = drink["Muhak"][4] !== undefined;
   const workerNames = useMemo(
     () =>
       Object.values(orders)
@@ -52,6 +50,7 @@ export default function Result({
   const BSKYReport = useMemo(
     () =>
       getReport(
+        onSplit,
         false,
         drink,
         percentages,
@@ -61,6 +60,7 @@ export default function Result({
         additionalOrders
       ),
     [
+      onSplit,
       drink,
       percentages,
       totalBisness,
@@ -73,6 +73,7 @@ export default function Result({
   const smReport = useMemo(
     () =>
       getReport(
+        onSplit,
         true,
         drink,
         percentages,
@@ -82,6 +83,7 @@ export default function Result({
         additionalOrders
       ),
     [
+      onSplit,
       drink,
       percentages,
       totalBisness,
@@ -91,15 +93,21 @@ export default function Result({
     ]
   );
 
+  const providerSums = useMemo(() => getProviderSums(drink), [drink]);
+  const providerPercentages = useMemo(
+    () => getProviderPercentages(percentages),
+    [percentages]
+  );
+
   const reportTable = useMemo(() => getReportTables(drink), [drink]);
   const reportPercentages = useMemo(
     () => getReportPercentages(percentages),
     [percentages]
   );
 
-  const totalGalmegi = useMemo(
-    () => getTotalGalmegi(drink, orders, additionalOrders),
-    [drink, orders, additionalOrders]
+  const galmegiSums = useMemo(
+    () => getGalmegiSums(onSplit, drink, orderSums, additionalOrderSums),
+    [onSplit, drink, orderSums, additionalOrderSums]
   );
 
   const handleBSKYReportClipboard = () => {
@@ -130,10 +138,10 @@ export default function Result({
         <h1>{getReportTitle(selectedBusinessZone)}</h1>
         <h2>1. 점유비</h2>
         <p>&nbsp;&nbsp;- 총 방문업소: {totalBisness}</p>
-        <p>&nbsp;&nbsp;- 총 테이블 수: {reportTable.sum.total}t</p>
+        <p>&nbsp;&nbsp;- 총 테이블 수: {providerSums.total}t</p>
         <section>
           <h3>
-            가. 무학: {reportTable.sum.muhak}t ({reportPercentages.sum.muhak}%)
+            가. 무학: {providerSums.muhak}t ({providerPercentages.muhak}%)
           </h3>
           <p>
             &nbsp;&nbsp;- 좋은데이: {reportTable.goodDay}t (
@@ -144,31 +152,37 @@ export default function Result({
             &nbsp;&nbsp;- 톡시리즈: {reportTable.toc}t ({reportPercentages.toc}
             %)
           </p>
-          {isReportWithGalmegi16(reportTable) &&
-            isReportWithGalmegi16(reportPercentages) && (
-              <>
-                <p>
-                  &nbsp;&nbsp;- 부산갈매기19: {reportTable.galmegi19}t (
-                  {reportPercentages.galmegi19}%)
-                </p>
-                <p>
-                  &nbsp;&nbsp;- 부산갈매기16: {reportTable.galmegi16}t (
-                  {reportPercentages.galmegi16}%)
-                </p>
-              </>
-            )}
-          {!isReportWithGalmegi16(reportTable) &&
-            !isReportWithGalmegi16(reportPercentages) && (
+          {onSplit ? (
+            <>
               <p>
-                &nbsp;&nbsp;- 부산갈매기: {reportTable.galmegi}t (
-                {reportPercentages.galmegi}%)
+                &nbsp;&nbsp;- 부산갈매기19: {drink["Muhak"][3] || " "}t (
+                {percentages["Muhak"][3]
+                  ? percentages["Muhak"][3].toFixed(1)
+                  : " "}
+                %)
               </p>
-            )}
+              <p>
+                &nbsp;&nbsp;- 부산갈매기16: {drink["Muhak"][4] || " "}t (
+                {percentages["Muhak"][4]
+                  ? percentages["Muhak"][4].toFixed(1)
+                  : " "}
+                %)
+              </p>
+            </>
+          ) : (
+            <p>
+              &nbsp;&nbsp;- 부산갈매기: {drink["Muhak"][3] || " "}t (
+              {percentages["Muhak"][3]
+                ? percentages["Muhak"][3].toFixed(1)
+                : " "}
+              %)
+            </p>
+          )}
         </section>
         <section>
           <h3>
-            나. 하이트진로: {reportTable.sum.hitejinro}t (
-            {reportPercentages.sum.hitejinro}%)
+            나. 하이트진로: {providerSums.hitejinro}t (
+            {providerPercentages.hitejinro}%)
           </h3>
           <p>
             &nbsp;&nbsp;- 참이슬: {reportTable.chamisul}t (
@@ -185,8 +199,8 @@ export default function Result({
         </section>
         <section>
           <h3>
-            다. 대선주조: {reportTable.sum.daesunjujo}t (
-            {reportPercentages.sum.daesunjujo}%)
+            다. 대선주조: {providerSums.daesunjujo}t (
+            {providerPercentages.daesunjujo}%)
           </h3>
           <p>
             &nbsp;&nbsp;- 대선(C1포함): {reportTable.daesun}t (
@@ -206,7 +220,7 @@ export default function Result({
         </section>
         <section>
           <h3>
-            라. 롯데: {reportTable.sum.lotte}t ({reportPercentages.sum.lotte}%)
+            라. 롯데: {providerSums.lotte}t ({providerPercentages.lotte}%)
           </h3>
           <p>
             &nbsp;&nbsp;- 새로: {reportTable.sero}t ({reportPercentages.sero}%)
@@ -254,25 +268,32 @@ export default function Result({
                 좋은데이 톡시리즈 : {reportTable.toc}T - {reportPercentages.toc}
                 %
               </p>
-              {hasGalmegi16 && (
+              {onSplit ? (
                 <>
                   <p>
-                    갈매기19 : {reportTable.galmegi19}T -{" "}
-                    {reportPercentages.galmegi19}%
+                    갈매기19 : {drink["Muhak"][3] || " "}T -{" "}
+                    {percentages["Muhak"][3]
+                      ? percentages["Muhak"][3].toFixed(1)
+                      : " "}
+                    %
                   </p>
                   <p>
-                    갈매기16 : {reportTable.galmegi16}T -{" "}
-                    {reportPercentages.galmegi16}%
+                    갈매기16 : {drink["Muhak"][4] || " "}T -{" "}
+                    {percentages["Muhak"][4]
+                      ? percentages["Muhak"][4].toFixed(1)
+                      : " "}
+                    %
                   </p>
                 </>
+              ) : (
+                <p>
+                  갈매기 : {drink["Muhak"][3] || " "}T -{" "}
+                  {percentages["Muhak"][3]
+                    ? percentages["Muhak"][3].toFixed(1)
+                    : " "}
+                  %
+                </p>
               )}
-              {!isReportWithGalmegi16(reportTable) &&
-                !isReportWithGalmegi16(reportPercentages) && (
-                  <p>
-                    갈매기19 : {reportTable.galmegi}T -{" "}
-                    {reportPercentages.galmegi}%
-                  </p>
-                )}
               <p>
                 대선 : {reportTable.daesun}T - {reportPercentages.daesun}%
               </p>
@@ -302,7 +323,7 @@ export default function Result({
                 청하: {reportTable.chungha}T - {reportPercentages.chungha}%
               </p>
               <br />
-              <p>갈매기 드시던 테이블까지 {totalGalmegi}개입니다.</p>
+              <SMGalmegiSummary onSplit={onSplit} galmegiSums={galmegiSums} />
             </section>
           </div>
         )}

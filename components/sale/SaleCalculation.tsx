@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
@@ -8,14 +8,19 @@ import Muhak from "./Muhak";
 import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
-import {
-  AdditionalOrders,
-  Drink,
-  Orders,
-  Percentages,
-} from "@/utils/sale/types";
+import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
-import { businessZones } from "@/utils/sale/businessZones";
+import {
+  businessZones,
+  businessZonesWithGalmegi16,
+} from "@/utils/sale/businessZones";
+import { initOrder, initOrderWithGamlegi16 } from "@/data/sale/order";
+import GalmegiSplitSwitch from "./GalmegiSplitSwitch";
+import {
+  getInitOrder,
+  getInitOrderSums,
+  getOrderSums,
+} from "@/libs/sale/order";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -33,13 +38,25 @@ export default function SaleCalculation() {
   const [showResult, setShowResult] = useState<boolean>(false);
   const [totalBisness, setTotalBisness] = useState<number>(0);
   const [orders, setOrders] = useState<Orders>({});
-  const [additionalOrders, setAdditionalOrders] = useState<AdditionalOrders>(
-    {}
-  );
+  const [additionalOrders, setAdditionalOrders] = useState<Orders>({});
+
   const [orderCount, setOrderCount] = useState<number>(1);
   const [selectedBusinessZone, setSelectedBusinessZone] = useState<string>(
     businessZones[0].name
   );
+  const [onSplit, setOnSplit] = useState(false);
+  const [orderSums, setOrderSums] = useState(getOrderSums(orders));
+  const [additionalOrderSums, setAdditionalOrderSums] = useState(
+    getOrderSums(additionalOrders)
+  );
+
+  useEffect(() => {
+    setOrderSums(getOrderSums(orders));
+  }, [orders]);
+
+  useEffect(() => {
+    setAdditionalOrderSums(getOrderSums(additionalOrders));
+  }, [additionalOrders]);
 
   const handleDrink = (company: string, index: number, value: string) => {
     setDrink((prev) => ({
@@ -66,36 +83,16 @@ export default function SaleCalculation() {
     setShowResult(true);
   };
 
-  const handleOrderChange = (index: number, key: string, value: string) => {
-    const numValue = Number(value);
-    setOrders((prev) => ({
-      ...prev,
-      [index]: {
-        ...prev[index],
-        [key]: key === "name" ? value : numValue,
-      },
-    }));
-
-    if (key === "name") {
-      setAdditionalOrders((prev) => ({
-        ...prev,
-        [index]: {
-          ...prev[index],
-          name: value,
-        },
-      }));
-    }
-  };
-
   const addOrderLine = () => {
+    const orderForm = onSplit ? initOrderWithGamlegi16 : initOrder;
     setOrders((prev) => ({
       ...prev,
-      [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
+      [orderCount]: orderForm,
     }));
 
     setAdditionalOrders((prev) => ({
       ...prev,
-      [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
+      [orderCount]: orderForm,
     }));
 
     setOrderCount(orderCount + 1);
@@ -115,9 +112,30 @@ export default function SaleCalculation() {
     });
   };
 
+  const handleOrderChange = (index: number, key: number, value: string) => {
+    const numValue = Number(value);
+    setOrders((prev) => ({
+      ...prev,
+      [index]: {
+        ...prev[index],
+        [key]: key === 0 ? value : numValue,
+      },
+    }));
+
+    if (key === 0) {
+      setAdditionalOrders((prev) => ({
+        ...prev,
+        [index]: {
+          ...prev[index],
+          [key]: value,
+        },
+      }));
+    }
+  };
+
   const handleAdditionalOrderChange = (
     index: number,
-    key: string,
+    key: number,
     value: string
   ) => {
     const numValue = Number(value);
@@ -125,22 +143,66 @@ export default function SaleCalculation() {
       ...prev,
       [index]: {
         ...prev[index],
-        [key]:
-          key === "goodDay" || key === "toctoc" || key === "galmegi"
-            ? numValue
-            : 0,
+        [key]: key === 0 ? value : numValue,
       },
     }));
   };
 
+  const handleGalmegiSplit = () => {
+    const newOnSplit = !onSplit;
+    setOnSplit(newOnSplit);
+    initOrderAndOrderSums(newOnSplit);
+    initMuhakDrink(newOnSplit);
+  };
+
+  const initOrderAndOrderSums = (newOnSplit: boolean) => {
+    const newOrders: Orders = { ...orders };
+    const newAdditionalOrders: Orders = { ...additionalOrders };
+    setOrders(getInitOrder(newOnSplit, newOrders));
+    setAdditionalOrders(getInitOrder(newOnSplit, newAdditionalOrders));
+
+    const newOrderSums: OrderSums = {
+      ...orderSums,
+    };
+    const newAdditionalOrderSums: OrderSums = { ...additionalOrderSums };
+    setOrderSums(getInitOrderSums(newOnSplit, newOrderSums));
+    setAdditionalOrderSums(
+      getInitOrderSums(newOnSplit, newAdditionalOrderSums)
+    );
+  };
+
+  const handleSelectBusinessZone = (selectedBusinessZone: string) => {
+    setSelectedBusinessZone(selectedBusinessZone);
+    if (businessZonesWithGalmegi16.includes(selectedBusinessZone)) {
+      setOnSplit(true);
+      initOrderAndOrderSums(true);
+    } else {
+      setOnSplit(false);
+      initOrderAndOrderSums(false);
+    }
+  };
+
+  const initMuhakDrink = (newOnSplit: boolean) => {
+    const newDrink = { ...drink };
+    if (newOnSplit) {
+      newDrink["Muhak"][3] = 0;
+      newDrink["Muhak"][4] = 0;
+      setDrink(newDrink);
+    } else {
+      newDrink["Muhak"][3] = 0;
+      delete newDrink["Muhak"][4];
+      setDrink(newDrink);
+    }
+  };
+
   return (
-    <div className="p-4">
+    <div className={`p-4 ${onSplit && "bg-neutral-950 text-white"}`}>
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">총 방문업소: </h1>
         <input
           type="number"
           pattern="\d*"
-          className="border border-gray-300 rounded p-1"
+          className="border border-gray-300 rounded p-1 text-black"
           placeholder="0"
           onChange={(e) => handleTotalBisness(e.target.value)}
         />
@@ -150,11 +212,16 @@ export default function SaleCalculation() {
         <h1 className="text-lg pr-2">상권 선택: </h1>
         <BusinessZoneSelector
           selectedBusinessZone={selectedBusinessZone}
-          onSelectBusinessZone={setSelectedBusinessZone}
+          handleSelectBusinessZone={handleSelectBusinessZone}
         />
       </section>
+      <GalmegiSplitSwitch
+        onSplit={onSplit}
+        handleGalmegiSplit={handleGalmegiSplit}
+      />
       <form onSubmit={(e) => handleCalculateBtn(e)}>
         <Muhak
+          onSplit={onSplit}
           handleDrink={(index, value) => handleDrink("Muhak", index, value)}
         />
         <Hite
@@ -173,6 +240,9 @@ export default function SaleCalculation() {
           addOrderLine={addOrderLine}
           removeOrderLine={removeOrderLine}
           handleAdditionalOrderChange={handleAdditionalOrderChange}
+          onSplit={onSplit}
+          orderSums={orderSums}
+          additionalOrderSums={additionalOrderSums}
         />
         <button
           type="submit"
@@ -183,12 +253,15 @@ export default function SaleCalculation() {
       </form>
       {showResult && (
         <Result
-          totalBisness={totalBisness}
-          selectedBusinessZone={selectedBusinessZone}
+          onSplit={onSplit}
           drink={drink}
           percentages={percentages}
+          totalBisness={totalBisness}
+          selectedBusinessZone={selectedBusinessZone}
           orders={orders}
           additionalOrders={additionalOrders}
+          orderSums={orderSums}
+          additionalOrderSums={additionalOrderSums}
         />
       )}
     </div>

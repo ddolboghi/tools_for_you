@@ -7,15 +7,32 @@ export type Percentages = {
 };
 
 type OrdersDataType = {
-  [key: number]: { [key: string]: number | string };
-};
-
-export type OrderSums = {
-  1: number;
-  2: number;
-  3: number;
+  [key: number]: { [key: number]: number | string };
 };
 
 export type Orders = OrdersDataType;
 
-export type AdditionalOrders = OrdersDataType;
+export type OrderSums = { [key: number]: number };
+
+export type ProviderSums = {
+  muhak: number;
+  hitejinro: number;
+  daesunjujo: number;
+  lotte: number;
+  total: number;
+};
+
+export type ProviderPercentages = {
+  muhak: number;
+  hitejinro: number;
+  daesunjujo: number;
+  lotte: number;
+};
+
+export type GalmegiSums = {
+  original19: number;
+  original16: number;
+  "19": number;
+  "16": number;
+  total: number;
+};

@@ -2,18 +2,18 @@ import { businessZones } from "@/utils/sale/businessZones";
 
 type BusinessZoneSelectorProps = {
   selectedBusinessZone: string;
-  onSelectBusinessZone: (businessZone: string) => void;
+  handleSelectBusinessZone: (businessZone: string) => void;
 };
 
 export default function BusinessZoneSelector({
   selectedBusinessZone,
-  onSelectBusinessZone,
+  handleSelectBusinessZone,
 }: BusinessZoneSelectorProps) {
   return (
     <select
       value={selectedBusinessZone}
-      onChange={(e) => onSelectBusinessZone(e.target.value)}
-      className="text-sm border border-gray-300 rounded p-1"
+      onChange={(e) => handleSelectBusinessZone(e.target.value)}
+      className="text-sm border border-gray-300 rounded p-1 text-black"
     >
       {businessZones.map((businessZone) => (
         <option

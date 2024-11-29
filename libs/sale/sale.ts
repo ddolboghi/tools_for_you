@@ -1,4 +1,4 @@
-import { AdditionalOrders, Orders, OrderSums } from "@/utils/sale/types";
+import { Drink, OrderSums } from "@/utils/sale/types";
 
 export const sumTableNum = (drinkOfCompany: { [key: number]: number }) => {
   return Object.values(drinkOfCompany).reduce(
@@ -76,22 +76,57 @@ export const calculateAdjustedPercentages = (
   return newPercentages;
 };
 
-export const getOrderSums = (orders: Orders) => {
-  const orderSums: OrderSums = { 1: 0, 2: 0, 3: 0 };
-  for (const order of Object.values(orders)) {
-    orderSums[1] += Number(order["goodDay"]) || 0;
-    orderSums[2] += Number(order["toctoc"]) || 0;
-    orderSums[3] += Number(order["galmegi"]) || 0;
-  }
-  return orderSums;
+export const getProviderSums = (drink: Drink) => {
+  const muhakTotal = sumTableNum(drink["Muhak"]);
+  const hiteTotal = sumTableNum(drink["Hite"]);
+  const daesunTotal = sumTableNum(drink["Daesun"]);
+  const lotteTotal = sumTableNum(drink["Lotte"]);
+  const totalTableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
+
+  return {
+    muhak: muhakTotal,
+    hitejinro: hiteTotal,
+    daesunjujo: daesunTotal,
+    lotte: lotteTotal,
+    total: totalTableNum,
+  };
 };
 
-export const getAdditionalOrderSums = (additionalOrders: AdditionalOrders) => {
-  const additionalOrderSums: OrderSums = { 1: 0, 2: 0, 3: 0 };
-  for (const addi of Object.values(additionalOrders)) {
-    additionalOrderSums[1] += Number(addi["goodDay"]) || 0;
-    additionalOrderSums[2] += Number(addi["toctoc"]) || 0;
-    additionalOrderSums[3] += Number(addi["galmegi"]) || 0;
-  }
-  return additionalOrderSums;
+export const getProviderPercentages = (percentages: PercentageType) => {
+  const muhakPercentage = sumPercentages(percentages["Muhak"]);
+  const hitePercentage = sumPercentages(percentages["Hite"]);
+  const daesunPercentage = sumPercentages(percentages["Daesun"]);
+  const lottePercentage = sumPercentages(percentages["Lotte"]);
+
+  return {
+    muhak: muhakPercentage,
+    hitejinro: hitePercentage,
+    daesunjujo: daesunPercentage,
+    lotte: lottePercentage,
+  };
+};
+
+export const getGalmegiSums = (
+  hasGalmegi16: boolean,
+  drink: Drink,
+  orderSums: OrderSums,
+  additionalOrderSums: OrderSums
+) => {
+  const originalGalmegi19Num = drink["Muhak"][3] || 0;
+  const originalGalmegi16Num = hasGalmegi16 ? drink["Muhak"][4] || 0 : 0;
+  const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3];
+  const galmegi16OrderNum = hasGalmegi16
+    ? orderSums[4] + additionalOrderSums[4]
+    : 0;
+  return {
+    original19: originalGalmegi19Num,
+    original16: originalGalmegi16Num,
+    "19": galmegi19OrderNum,
+    "16": galmegi16OrderNum,
+    total:
+      originalGalmegi19Num +
+      originalGalmegi16Num +
+      galmegi19OrderNum +
+      galmegi16OrderNum,
+  };
 };

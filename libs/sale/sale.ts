@@ -1,4 +1,4 @@
-import { Orders, OrderSums } from "@/utils/sale/types";
+import { Drink, OrderSums } from "@/utils/sale/types";
 
 export const sumTableNum = (drinkOfCompany: { [key: number]: number }) => {
   return Object.values(drinkOfCompany).reduce(
@@ -76,46 +76,57 @@ export const calculateAdjustedPercentages = (
   return newPercentages;
 };
 
-export const getOrderSums = (orders: Orders) => {
-  const orderSums: OrderSums = {};
-  const keys = Object.keys(Object.values(orders)[0] || {});
-  keys.forEach((key) => {
-    if (Number(key) > 0) orderSums[Number(key)] = 0;
-  });
+export const getProviderSums = (drink: Drink) => {
+  const muhakTotal = sumTableNum(drink["Muhak"]);
+  const hiteTotal = sumTableNum(drink["Hite"]);
+  const daesunTotal = sumTableNum(drink["Daesun"]);
+  const lotteTotal = sumTableNum(drink["Lotte"]);
+  const totalTableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
 
-  for (const order of Object.values(orders)) {
-    Object.entries(order).forEach(([key, value]) => {
-      if (key !== "0") {
-        orderSums[Number(key)] += Number(value) || 0;
-      }
-    });
-  }
-
-  return orderSums;
+  return {
+    muhak: muhakTotal,
+    hitejinro: hiteTotal,
+    daesunjujo: daesunTotal,
+    lotte: lotteTotal,
+    total: totalTableNum,
+  };
 };
 
-export const getInitOrder = (onSplit: boolean, orders: Orders): Orders => {
-  if (onSplit) {
-    Object.keys(orders).forEach((key) => {
-      orders[Number(key)][3] = 0;
-      orders[Number(key)][4] = 0;
-    });
-    return orders;
-  }
-  Object.keys(orders).forEach((key) => {
-    orders[Number(key)][3] = 0;
-    delete orders[Number(key)][4];
-  });
-  return orders;
+export const getProviderPercentages = (percentages: PercentageType) => {
+  const muhakPercentage = sumPercentages(percentages["Muhak"]);
+  const hitePercentage = sumPercentages(percentages["Hite"]);
+  const daesunPercentage = sumPercentages(percentages["Daesun"]);
+  const lottePercentage = sumPercentages(percentages["Lotte"]);
+
+  return {
+    muhak: muhakPercentage,
+    hitejinro: hitePercentage,
+    daesunjujo: daesunPercentage,
+    lotte: lottePercentage,
+  };
 };
 
-export const getInitOrderSums = (onSplit: boolean, orderSums: OrderSums) => {
-  if (onSplit) {
-    orderSums[3] = 0;
-    orderSums[4] = 0;
-    return orderSums;
-  }
-  orderSums[3] = 0;
-  delete orderSums[4];
-  return orderSums;
+export const getGalmegiSums = (
+  hasGalmegi16: boolean,
+  drink: Drink,
+  orderSums: OrderSums,
+  additionalOrderSums: OrderSums
+) => {
+  const originalGalmegi19Num = drink["Muhak"][3] || 0;
+  const originalGalmegi16Num = hasGalmegi16 ? drink["Muhak"][4] || 0 : 0;
+  const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3];
+  const galmegi16OrderNum = hasGalmegi16
+    ? orderSums[4] + additionalOrderSums[4]
+    : 0;
+  return {
+    original19: originalGalmegi19Num,
+    original16: originalGalmegi16Num,
+    "19": galmegi19OrderNum,
+    "16": galmegi16OrderNum,
+    total:
+      originalGalmegi19Num +
+      originalGalmegi16Num +
+      galmegi19OrderNum +
+      galmegi16OrderNum,
+  };
 };

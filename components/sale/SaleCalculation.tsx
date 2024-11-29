@@ -87,15 +87,18 @@ export default function SaleCalculation() {
     }
   };
 
-  const addOrderLine = () => {
+  const addOrderLine = (onSplit: boolean) => {
+    const orderForm = onSplit
+      ? { name: "", goodDay: 0, toc: 0, galmegi19: 0, galmegi16: 0 }
+      : { name: "", goodDay: 0, toc: 0, galmegi: 0 };
     setOrders((prev) => ({
       ...prev,
-      [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
+      [orderCount]: orderForm,
     }));
 
     setAdditionalOrders((prev) => ({
       ...prev,
-      [orderCount]: { name: "", goodDay: 0, toctoc: 0, galmegi: 0 },
+      [orderCount]: orderForm,
     }));
 
     setOrderCount(orderCount + 1);
@@ -125,10 +128,7 @@ export default function SaleCalculation() {
       ...prev,
       [index]: {
         ...prev[index],
-        [key]:
-          key === "goodDay" || key === "toctoc" || key === "galmegi"
-            ? numValue
-            : 0,
+        [key]: key === "name" ? value : numValue,
       },
     }));
   };

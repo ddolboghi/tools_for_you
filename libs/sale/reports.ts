@@ -1,16 +1,16 @@
 import {
   AdditionalOrders,
   Drink,
+  isReportWithGalmegi16,
   Orders,
   Percentages,
+  ReportPercentagesWithGalmegi,
+  ReportPercentagesWithGalmegi16,
+  ReportTablesWithGalmegi,
+  ReportTablesWithGalmegi16,
 } from "@/utils/sale/types";
 import { translateToKoreanDayOfWeek } from "./dates";
-import {
-  getAdditionalOrderSums,
-  getOrderSums,
-  sumPercentages,
-  sumTableNum,
-} from "./sale";
+import { getOrderSums, sumPercentages, sumTableNum } from "./sale";
 
 export const getReportTitle = (selectedBusinessZone: string) => {
   const kstDate = new Date(
@@ -22,12 +22,16 @@ export const getReportTitle = (selectedBusinessZone: string) => {
   return `<${month}월 ${day}일 ${dayOfWeek} ${selectedBusinessZone} 상권보고>`;
 };
 
-export const getReportTables = (drink: Drink) => {
+export const getReportTables = (
+  drink: Drink
+): ReportTablesWithGalmegi | ReportTablesWithGalmegi16 => {
   const muhakTotal = sumTableNum(drink["Muhak"]);
   const hiteTotal = sumTableNum(drink["Hite"]);
   const daesunTotal = sumTableNum(drink["Daesun"]);
   const lotteTotal = sumTableNum(drink["Lotte"]);
   const totalTableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
+  const hasGalmegi16 = drink["Muhak"][4] !== undefined;
+
   return {
     sum: {
       muhak: muhakTotal,
@@ -36,26 +40,36 @@ export const getReportTables = (drink: Drink) => {
       lotte: lotteTotal,
       total: totalTableNum,
     },
-    goodDay: drink["Muhak"][1] || " ",
-    toc: drink["Muhak"][2] || " ",
-    galmegi: drink["Muhak"][3] || " ",
-    daesun: drink["Daesun"][1] || " ",
-    gangali: drink["Daesun"][2] || " ",
-    daesunEtc: drink["Daesun"][3] || " ",
-    chamisul: drink["Hite"][1] || " ",
-    jinro: drink["Hite"][2] || " ",
-    jinrogold: drink["Hite"][3] || " ",
-    sero: drink["Lotte"][1] || " ",
-    serosalgu: drink["Lotte"][2] || " ",
-    chungha: drink["Lotte"][3] || " ",
+    goodDay: String(drink["Muhak"][1]) || " ",
+    toc: String(drink["Muhak"][2]) || " ",
+    ...(hasGalmegi16
+      ? {
+          galmegi19: String(drink["Muhak"][3]) || " ",
+          galmegi16: String(drink["Muhak"][4]) || " ",
+        }
+      : {
+          galmegi: String(drink["Muhak"][3]) || " ",
+        }),
+    daesun: String(drink["Daesun"][1]) || " ",
+    gangali: String(drink["Daesun"][2]) || " ",
+    daesunEtc: String(drink["Daesun"][3]) || " ",
+    chamisul: String(drink["Hite"][1]) || " ",
+    jinro: String(drink["Hite"][2]) || " ",
+    jinrogold: String(drink["Hite"][3]) || " ",
+    sero: String(drink["Lotte"][1]) || " ",
+    serosalgu: String(drink["Lotte"][2]) || " ",
+    chungha: String(drink["Lotte"][3]) || " ",
   };
 };
 
-export const getReportPercentages = (percentages: Percentages) => {
+export const getReportPercentages = (
+  percentages: Percentages
+): ReportPercentagesWithGalmegi | ReportPercentagesWithGalmegi16 => {
   const muhakPercentage = sumPercentages(percentages["Muhak"]);
   const hitePercentage = sumPercentages(percentages["Hite"]);
   const daesunPercentage = sumPercentages(percentages["Daesun"]);
   const lottePercentage = sumPercentages(percentages["Lotte"]);
+  const hasGalmegi16 = percentages["Muhak"][4] !== undefined;
   return {
     sum: {
       muhak: muhakPercentage,
@@ -65,7 +79,21 @@ export const getReportPercentages = (percentages: Percentages) => {
     },
     goodDay: percentages["Muhak"][1] ? percentages["Muhak"][1].toFixed(1) : " ",
     toc: percentages["Muhak"][2] ? percentages["Muhak"][2].toFixed(1) : " ",
-    galmegi: percentages["Muhak"][3] ? percentages["Muhak"][3].toFixed(1) : " ",
+    ...(hasGalmegi16
+      ? {
+          galmegi19: percentages["Muhak"][3]
+            ? percentages["Muhak"][3].toFixed(1)
+            : " ",
+          galmegi16: percentages["Muhak"][4]
+            ? percentages["Muhak"][4].toFixed(1)
+            : " ",
+        }
+      : {
+          galmegi: percentages["Muhak"][3]
+            ? percentages["Muhak"][3].toFixed(1)
+            : " ",
+        }),
+
     daesun: percentages["Daesun"][1]
       ? percentages["Daesun"][1].toFixed(1)
       : " ",
@@ -93,7 +121,7 @@ export const getTotalGalmegi = (
 ) =>
   (drink["Muhak"][3] || 0) +
   getOrderSums(orders)[3] +
-  getAdditionalOrderSums(additionalOrders)[3];
+  getOrderSums(additionalOrders)[3];
 
 export const getReport = (
   isForSm: boolean,
@@ -104,6 +132,8 @@ export const getReport = (
   orders: Orders,
   additionalOrders: AdditionalOrders
 ) => {
+  const hasGalmegi16 = drink["Muhak"][4] !== undefined;
+
   const workerNames = Object.values(orders)
     .map((order) => order.name)
     .join(", ");
@@ -112,27 +142,50 @@ export const getReport = (
   let workerReportOfOrders = "";
   for (const order of Object.values(orders)) {
     workers.add(order["name"] as string);
-    workerReportOfOrders += `${order["name"]}: ${
-      order["goodDay"] || ""
-    }t(좋은데이) / ${order["toctoc"] || ""}t(톡소다) / ${
-      order["galmegi"] || ""
-    }t(부산갈매기)\n`;
+    if (hasGalmegi16) {
+      workerReportOfOrders += `${order["name"]}: ${
+        order["goodDay"] || ""
+      }t(좋은데이) / ${order["toc"] || ""}t(톡소다) / ${
+        order["galmegi19"] || ""
+      }t(부산갈매기19) / ${order["galmegi16"] || ""}t(부산갈매기16)\n`;
+    } else {
+      workerReportOfOrders += `${order["name"]}: ${
+        order["goodDay"] || ""
+      }t(좋은데이) / ${order["toc"] || ""}t(톡소다) / ${
+        order["galmegi"] || ""
+      }t(부산갈매기)\n`;
+    }
   }
 
   let workerReportOfAdditionalOrders = "";
   for (const order of Object.values(additionalOrders)) {
-    workerReportOfAdditionalOrders += `${order["name"]}: ${
-      order["goodDay"] || ""
-    }t(좋은데이) / ${order["toctoc"] || ""}t(톡소다) / ${
-      order["galmegi"] || ""
-    }t(부산갈매기)\n`;
+    if (hasGalmegi16) {
+      workerReportOfAdditionalOrders += `${order["name"]}: ${
+        order["goodDay"] || ""
+      }t(좋은데이) / ${order["toc"] || ""}t(톡소다) / ${
+        order["galmegi19"] || ""
+      }t(부산갈매기19) / ${order["galmegi16"] || ""}t(부산갈매기16)\n`;
+    } else {
+      workerReportOfAdditionalOrders += `${order["name"]}: ${
+        order["goodDay"] || ""
+      }t(좋은데이) / ${order["toc"] || ""}t(톡소다) / ${
+        order["galmegi"] || ""
+      }t(부산갈매기)\n`;
+    }
   }
 
   const orderSums = getOrderSums(orders);
-  const additionalOrderSums = getAdditionalOrderSums(additionalOrders);
+  const additionalOrderSums = getOrderSums(additionalOrders);
 
   const reportTables = getReportTables(drink);
   const reportPercentages = getReportPercentages(percentages);
+
+  const originGalmegi19Num =
+    (drink["Muhak"][3] || 0) + orderSums[3] + additionalOrderSums[3];
+  const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3];
+  const galmegi16OrderNum = hasGalmegi16
+    ? orderSums[4] + additionalOrderSums[4]
+    : 0;
 
   if (isForSm) {
     return `<이순조SM 퇴근보고>
@@ -141,7 +194,17 @@ export const getReport = (
 2. 야간 음용비
 좋은데이 : ${reportTables.goodDay}T - ${reportPercentages.goodDay}%
 좋은데이 톡시리즈 : ${reportTables.toc}T - ${reportPercentages.toc}%
-갈매기 : ${reportTables.galmegi}T - ${reportPercentages.galmegi}%
+${
+  isReportWithGalmegi16(reportTables) &&
+  isReportWithGalmegi16(reportPercentages) &&
+  `갈매기19 : ${reportTables.galmegi19}T - ${reportPercentages.galmegi19}%
+갈매기16 : ${reportTables.galmegi19}T - ${reportPercentages.galmegi16}%`
+}
+${
+  !isReportWithGalmegi16(reportTables) &&
+  !isReportWithGalmegi16(reportPercentages) &&
+  `갈매기 : ${reportTables.galmegi}T - ${reportPercentages.galmegi}%`
+}
 대선 : ${reportTables.daesun}T - ${reportPercentages.daesun}% 
 강알리 : ${reportTables.gangali}T - ${reportPercentages.gangali}%
 진로 : ${reportTables.jinro}T - ${reportPercentages.jinro}%
@@ -153,9 +216,8 @@ C1: T - %
 새로(살구): ${reportTables.serosalgu}T - ${reportPercentages.serosalgu}%
 청하: ${reportTables.chungha}T - ${reportPercentages.chungha}%
 
-갈매기 드시던 테이블까지 ${
-      (drink["Muhak"][3] || 0) + orderSums[3] + additionalOrderSums[3]
-    }개입니다.`;
+갈매기19 드시던 테이블 ${originGalmegi19Num}\n갈매기19 전/추 ${galmegi19OrderNum}\n갈매기16 전/추 ${galmegi16OrderNum}\n
+    총 `;
   }
 
   return `${getReportTitle(selectedBusinessZone)}
@@ -165,9 +227,17 @@ C1: T - %
 가. 무학 : ${reportTables.sum.muhak}t (${reportPercentages.sum.muhak}%)
 \u0020\u0020- 좋은데이: ${reportTables.goodDay}t (${reportPercentages.goodDay}%)
 \u0020\u0020- 톡시리즈 : ${reportTables.toc}t (${reportPercentages.toc}%)
-\u0020\u0020- 부산갈매기 : ${reportTables.galmegi}t (${
-    reportPercentages.galmegi
-  }%)
+${
+  isReportWithGalmegi16(reportTables) &&
+  isReportWithGalmegi16(reportPercentages) &&
+  `\u0020\u0020- 부산갈매기19 : ${reportTables.galmegi19}t (${reportPercentages.galmegi19}%)
+\u0020\u0020- 부산갈매기16 : ${reportTables.galmegi16}t (${reportPercentages.galmegi16}%)`
+}
+${
+  !isReportWithGalmegi16(reportTables) &&
+  !isReportWithGalmegi16(reportPercentages) &&
+  `\u0020\u0020- 부산갈매기 : ${reportTables.galmegi}t (${reportPercentages.galmegi}%)`
+}
 나. 하이트진로 : ${reportTables.sum.hitejinro}t (${
     reportPercentages.sum.hitejinro
   }%)
@@ -201,12 +271,22 @@ C1: T - %
 가. 근무인원
 ${workerNames}
 나. 전환: ${orderSums[1] || 0}t(좋은데이) / ${orderSums[2] || 0}t(톡소다) / ${
-    orderSums[3] || 0
-  }t(부산갈매기)
+    hasGalmegi16
+      ? `${orderSums[3] || 0}t(부산갈매기19) / ${
+          orderSums[4] || 0
+        }t(부산갈매기16)`
+      : `${orderSums[3] || 0}t(부산갈매기)`
+  }
 ${workerReportOfOrders}
 다. 추가주문: ${additionalOrderSums[1] || 0}t(좋은데이) / ${
     additionalOrderSums[2] || 0
-  }t(톡소다) / ${additionalOrderSums[3] || 0}t(부산갈매기) 
+  }t(톡소다) / ${
+    hasGalmegi16
+      ? `${additionalOrderSums[3] || 0}t(부산갈매기19) / ${
+          additionalOrderSums[4] || 0
+        }t(부산갈매기)`
+      : `${additionalOrderSums[3] || 0}t(부산갈매기16)`
+  }
 ${workerReportOfAdditionalOrders}
 `;
 };

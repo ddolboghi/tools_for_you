@@ -1,4 +1,4 @@
-import { AdditionalOrders, Orders, OrderSums } from "@/utils/sale/types";
+import { Orders, OrderSums } from "@/utils/sale/types";
 
 export const sumTableNum = (drinkOfCompany: { [key: number]: number }) => {
   return Object.values(drinkOfCompany).reduce(
@@ -77,21 +77,17 @@ export const calculateAdjustedPercentages = (
 };
 
 export const getOrderSums = (orders: Orders) => {
-  const orderSums: OrderSums = { 1: 0, 2: 0, 3: 0 };
+  const orderSums: OrderSums = {};
+  console.log(orders);
+  const keys = Object.keys(Object.values(orders)[0] || {});
+  keys.forEach((_, index) => {
+    orderSums[index] = 0;
+  });
   for (const order of Object.values(orders)) {
-    orderSums[1] += Number(order["goodDay"]) || 0;
-    orderSums[2] += Number(order["toctoc"]) || 0;
-    orderSums[3] += Number(order["galmegi"]) || 0;
+    Object.values(order).forEach((value, index) => {
+      orderSums[index] += Number(value) || 0;
+    });
   }
-  return orderSums;
-};
 
-export const getAdditionalOrderSums = (additionalOrders: AdditionalOrders) => {
-  const additionalOrderSums: OrderSums = { 1: 0, 2: 0, 3: 0 };
-  for (const addi of Object.values(additionalOrders)) {
-    additionalOrderSums[1] += Number(addi["goodDay"]) || 0;
-    additionalOrderSums[2] += Number(addi["toctoc"]) || 0;
-    additionalOrderSums[3] += Number(addi["galmegi"]) || 0;
-  }
-  return additionalOrderSums;
+  return orderSums;
 };

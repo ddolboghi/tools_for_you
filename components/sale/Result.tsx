@@ -7,10 +7,11 @@ import {
   getReportTitle,
   getTotalGalmegi,
 } from "@/libs/sale/reports";
-import { getAdditionalOrderSums, getOrderSums } from "@/libs/sale/sale";
+import { getOrderSums } from "@/libs/sale/sale";
 import {
   AdditionalOrders,
   Drink,
+  isReportWithGalmegi16,
   Orders,
   Percentages,
 } from "@/utils/sale/types";
@@ -43,7 +44,7 @@ export default function Result({
 
   const orderSums = useMemo(() => getOrderSums(orders), [orders]);
   const additionalOrderSums = useMemo(
-    () => getAdditionalOrderSums(additionalOrders),
+    () => getOrderSums(additionalOrders),
     [additionalOrders]
   );
 
@@ -142,10 +143,26 @@ export default function Result({
             &nbsp;&nbsp;- 톡시리즈: {reportTable.toc}t ({reportPercentages.toc}
             %)
           </p>
-          <p>
-            &nbsp;&nbsp;- 부산갈매기: {reportTable.galmegi}t (
-            {reportPercentages.galmegi}%)
-          </p>
+          {isReportWithGalmegi16(reportTable) &&
+            isReportWithGalmegi16(reportPercentages) && (
+              <>
+                <p>
+                  &nbsp;&nbsp;- 부산갈매기19: {reportTable.galmegi19}t (
+                  {reportPercentages.galmegi19}%)
+                </p>
+                <p>
+                  &nbsp;&nbsp;- 부산갈매기16: {reportTable.galmegi16}t (
+                  {reportPercentages.galmegi16}%)
+                </p>
+              </>
+            )}
+          {!isReportWithGalmegi16(reportTable) &&
+            !isReportWithGalmegi16(reportPercentages) && (
+              <p>
+                &nbsp;&nbsp;- 부산갈매기: {reportTable.galmegi}t (
+                {reportPercentages.galmegi}%)
+              </p>
+            )}
         </section>
         <section>
           <h3>
@@ -219,7 +236,7 @@ export default function Result({
           {Object.values(orders).map((order, orderIdx) => (
             <p key={orderIdx}>
               {order["name"]}: {order["goodDay"] || ""}t(좋은데이) /{" "}
-              {order["toctoc"] || ""}t(톡소다) / {order["galmegi"] || ""}
+              {order["toc"] || ""}t(톡소다) / {order["galmegi"] || ""}
               t(부산갈매기)
             </p>
           ))}
@@ -234,7 +251,7 @@ export default function Result({
           {Object.values(additionalOrders).map((order, orderIdx) => (
             <p key={orderIdx}>
               {order["name"]}: {order["goodDay"] || ""}t(좋은데이) /{" "}
-              {order["toctoc"] || ""}t(톡소다) / {order["galmegi"] || ""}
+              {order["toc"] || ""}t(톡소다) / {order["galmegi"] || ""}
               t(부산갈매기)
             </p>
           ))}
@@ -257,9 +274,26 @@ export default function Result({
             <p>
               좋은데이 톡시리즈 : {reportTable.toc}T - {reportPercentages.toc}%
             </p>
-            <p>
-              갈매기 : {reportTable.galmegi}T - {reportPercentages.galmegi}%
-            </p>
+            {isReportWithGalmegi16(reportTable) &&
+              isReportWithGalmegi16(reportPercentages) && (
+                <>
+                  <p>
+                    갈매기19 : {reportTable.galmegi19}T -{" "}
+                    {reportPercentages.galmegi19}%
+                  </p>
+                  <p>
+                    갈매기16 : {reportTable.galmegi16}T -{" "}
+                    {reportPercentages.galmegi16}%
+                  </p>
+                </>
+              )}
+            {!isReportWithGalmegi16(reportTable) &&
+              !isReportWithGalmegi16(reportPercentages) && (
+                <p>
+                  갈매기19 : {reportTable.galmegi}T -{" "}
+                  {reportPercentages.galmegi}%
+                </p>
+              )}
             <p>
               대선 : {reportTable.daesun}T - {reportPercentages.daesun}%
             </p>

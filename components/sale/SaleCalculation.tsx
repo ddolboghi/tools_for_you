@@ -152,6 +152,7 @@ export default function SaleCalculation() {
     const newOnSplit = !onSplit;
     setOnSplit(newOnSplit);
     initOrderAndOrderSums(newOnSplit);
+    initMuhakDrink(newOnSplit);
   };
 
   const initOrderAndOrderSums = (newOnSplit: boolean) => {
@@ -178,6 +179,19 @@ export default function SaleCalculation() {
     } else {
       setOnSplit(false);
       initOrderAndOrderSums(false);
+    }
+  };
+
+  const initMuhakDrink = (newOnSplit: boolean) => {
+    const newDrink = { ...drink };
+    if (newOnSplit) {
+      newDrink["Muhak"][3] = 0;
+      newDrink["Muhak"][4] = 0;
+      setDrink(newDrink);
+    } else {
+      newDrink["Muhak"][3] = 0;
+      delete newDrink["Muhak"][4];
+      setDrink(newDrink);
     }
   };
 

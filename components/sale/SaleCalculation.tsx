@@ -5,13 +5,7 @@ import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
 import Muhak from "./Muhak";
-import {
-  calculateAdjustedPercentages,
-  getInitOrder,
-  getInitOrderSums,
-  getOrderSums,
-  sumTableNum,
-} from "@/libs/sale/sale";
+import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
 import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
@@ -22,6 +16,11 @@ import {
 } from "@/utils/sale/businessZones";
 import { initOrder, initOrderWithGamlegi16 } from "@/data/sale/order";
 import GalmegiSplitSwitch from "./GalmegiSplitSwitch";
+import {
+  getInitOrder,
+  getInitOrderSums,
+  getOrderSums,
+} from "@/libs/sale/order";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({

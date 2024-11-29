@@ -16,7 +16,10 @@ import Result from "./Result";
 import Order from "./Order";
 import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
-import { businessZones } from "@/utils/sale/businessZones";
+import {
+  businessZones,
+  businessZonesWithGalmegi16,
+} from "@/utils/sale/businessZones";
 import { initOrder, initOrderWithGamlegi16 } from "@/data/sale/order";
 import GalmegiSplitSwitch from "./GalmegiSplitSwitch";
 
@@ -149,7 +152,10 @@ export default function SaleCalculation() {
   const handleGalmegiSplit = () => {
     const newOnSplit = !onSplit;
     setOnSplit(newOnSplit);
+    initOrderAndOrderSums(newOnSplit);
+  };
 
+  const initOrderAndOrderSums = (newOnSplit: boolean) => {
     const newOrders: Orders = { ...orders };
     const newAdditionalOrders: Orders = { ...additionalOrders };
     setOrders(getInitOrder(newOnSplit, newOrders));
@@ -163,6 +169,17 @@ export default function SaleCalculation() {
     setAdditionalOrderSums(
       getInitOrderSums(newOnSplit, newAdditionalOrderSums)
     );
+  };
+
+  const handleSelectBusinessZone = (selectedBusinessZone: string) => {
+    setSelectedBusinessZone(selectedBusinessZone);
+    if (businessZonesWithGalmegi16.includes(selectedBusinessZone)) {
+      setOnSplit(true);
+      initOrderAndOrderSums(true);
+    } else {
+      setOnSplit(false);
+      initOrderAndOrderSums(false);
+    }
   };
 
   return (
@@ -182,7 +199,7 @@ export default function SaleCalculation() {
         <h1 className="text-lg pr-2">상권 선택: </h1>
         <BusinessZoneSelector
           selectedBusinessZone={selectedBusinessZone}
-          onSelectBusinessZone={setSelectedBusinessZone}
+          handleSelectBusinessZone={handleSelectBusinessZone}
         />
       </section>
       <GalmegiSplitSwitch

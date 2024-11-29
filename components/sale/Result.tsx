@@ -7,45 +7,46 @@ import {
   getReportTitle,
   getTotalGalmegi,
 } from "@/libs/sale/reports";
-import { getOrderSums } from "@/libs/sale/sale";
 import {
-  AdditionalOrders,
   Drink,
   isReportWithGalmegi16,
   Orders,
+  OrderSums,
   Percentages,
 } from "@/utils/sale/types";
 import { useMemo } from "react";
+import OrderResult from "./OrderResult";
 
 type ResultProps = {
+  onSplit: boolean;
   drink: Drink;
   percentages: Percentages;
   totalBisness: number;
   selectedBusinessZone: string;
   orders: Orders;
-  additionalOrders: AdditionalOrders;
+  additionalOrders: Orders;
+  orderSums: OrderSums;
+  additionalOrderSums: OrderSums;
 };
 
 export default function Result({
+  onSplit,
   drink,
   percentages,
   totalBisness,
   selectedBusinessZone,
   orders,
   additionalOrders,
+  orderSums,
+  additionalOrderSums,
 }: ResultProps) {
+  const hasGalmegi16 = drink["Muhak"][4] !== undefined;
   const workerNames = useMemo(
     () =>
       Object.values(orders)
-        .map((order) => order.name)
+        .map((order) => order[0])
         .join(", "),
     [orders]
-  );
-
-  const orderSums = useMemo(() => getOrderSums(orders), [orders]);
-  const additionalOrderSums = useMemo(
-    () => getOrderSums(additionalOrders),
-    [additionalOrders]
   );
 
   const BSKYReport = useMemo(
@@ -228,54 +229,32 @@ export default function Result({
           <h3>가. 근무인원</h3>
           <p>{workerNames}</p>
         </section>
-        <section>
-          <h3>
-            나. 전환: {orderSums[1] || 0}t(좋은데이) / {orderSums[2] || 0}
-            t(톡소다) / {orderSums[3] || 0}t(부산갈매기)
-          </h3>
-          {Object.values(orders).map((order, orderIdx) => (
-            <p key={orderIdx}>
-              {order["name"]}: {order["goodDay"] || ""}t(좋은데이) /{" "}
-              {order["toc"] || ""}t(톡소다) / {order["galmegi"] || ""}
-              t(부산갈매기)
-            </p>
-          ))}
-        </section>
-        <br />
-        <section>
-          <h3>
-            다. 추가주문: {additionalOrderSums[1] || 0}t(좋은데이) /{" "}
-            {additionalOrderSums[2] || 0}
-            t(톡소다) / {additionalOrderSums[3] || 0}t(부산갈매기)
-          </h3>
-          {Object.values(additionalOrders).map((order, orderIdx) => (
-            <p key={orderIdx}>
-              {order["name"]}: {order["goodDay"] || ""}t(좋은데이) /{" "}
-              {order["toc"] || ""}t(톡소다) / {order["galmegi"] || ""}
-              t(부산갈매기)
-            </p>
-          ))}
-        </section>
-      </div>
-      {selectedBusinessZone === "광안" && (
-        <div className="border border-blue-300">
-          <h1>
-            {"<"}이순조SM 퇴근보고{">"}
-          </h1>
-          <section>
-            <h1>1. 야간판촉지역</h1>
-            <p>광안 바닷가</p>
-          </section>
-          <section>
-            <h1>2. 야간 음용비</h1>
-            <p>
-              좋은데이 : {reportTable.goodDay}T - {reportPercentages.goodDay}%
-            </p>
-            <p>
-              좋은데이 톡시리즈 : {reportTable.toc}T - {reportPercentages.toc}%
-            </p>
-            {isReportWithGalmegi16(reportTable) &&
-              isReportWithGalmegi16(reportPercentages) && (
+        <OrderResult
+          onSplit={onSplit}
+          orders={orders}
+          additionalOrders={additionalOrders}
+          orderSums={orderSums}
+          additionalOrderSums={additionalOrderSums}
+        />
+        {selectedBusinessZone === "광안" && (
+          <div className="border border-blue-300">
+            <h1>
+              {"<"}이순조SM 퇴근보고{">"}
+            </h1>
+            <section>
+              <h1>1. 야간판촉지역</h1>
+              <p>광안 바닷가</p>
+            </section>
+            <section>
+              <h1>2. 야간 음용비</h1>
+              <p>
+                좋은데이 : {reportTable.goodDay}T - {reportPercentages.goodDay}%
+              </p>
+              <p>
+                좋은데이 톡시리즈 : {reportTable.toc}T - {reportPercentages.toc}
+                %
+              </p>
+              {hasGalmegi16 && (
                 <>
                   <p>
                     갈매기19 : {reportTable.galmegi19}T -{" "}
@@ -287,60 +266,63 @@ export default function Result({
                   </p>
                 </>
               )}
-            {!isReportWithGalmegi16(reportTable) &&
-              !isReportWithGalmegi16(reportPercentages) && (
-                <p>
-                  갈매기19 : {reportTable.galmegi}T -{" "}
-                  {reportPercentages.galmegi}%
-                </p>
-              )}
-            <p>
-              대선 : {reportTable.daesun}T - {reportPercentages.daesun}%
-            </p>
-            <p>
-              강알리 : {reportTable.gangali}T - {reportPercentages.gangali}%
-            </p>
-            <p>
-              진로 : {reportTable.jinro}T - {reportPercentages.jinro}%
-            </p>
-            <p>
-              진로(골드) : {reportTable.jinrogold}T -{" "}
-              {reportPercentages.jinrogold}%
-            </p>
-            <p>
-              참이슬 : {reportTable.chamisul}T - {reportPercentages.chamisul}%
-            </p>
-            <p>C1: T - %</p>
-            <h2>기타</h2>
-            <p>
-              새로: {reportTable.sero}T - {reportPercentages.sero}% %
-            </p>
-            <p>
-              새로(살구): {reportTable.serosalgu}T -{" "}
-              {reportPercentages.serosalgu}%
-            </p>
-            <p>
-              청하: {reportTable.chungha}T - {reportPercentages.chungha}%
-            </p>
-            <br />
-            <p>갈매기 드시던 테이블까지 {totalGalmegi}개입니다.</p>
-          </section>
-        </div>
-      )}
-      <button
-        className="my-2 bg-blue-500 text-white rounded p-2 w-full"
-        onClick={handleBSKYReportClipboard}
-      >
-        상권 톡방용 보고 복사하기
-      </button>
-      {selectedBusinessZone === "광안" && (
+              {!isReportWithGalmegi16(reportTable) &&
+                !isReportWithGalmegi16(reportPercentages) && (
+                  <p>
+                    갈매기19 : {reportTable.galmegi}T -{" "}
+                    {reportPercentages.galmegi}%
+                  </p>
+                )}
+              <p>
+                대선 : {reportTable.daesun}T - {reportPercentages.daesun}%
+              </p>
+              <p>
+                강알리 : {reportTable.gangali}T - {reportPercentages.gangali}%
+              </p>
+              <p>
+                진로 : {reportTable.jinro}T - {reportPercentages.jinro}%
+              </p>
+              <p>
+                진로(골드) : {reportTable.jinrogold}T -{" "}
+                {reportPercentages.jinrogold}%
+              </p>
+              <p>
+                참이슬 : {reportTable.chamisul}T - {reportPercentages.chamisul}%
+              </p>
+              <p>C1: T - %</p>
+              <h2>기타</h2>
+              <p>
+                새로: {reportTable.sero}T - {reportPercentages.sero}% %
+              </p>
+              <p>
+                새로(살구): {reportTable.serosalgu}T -{" "}
+                {reportPercentages.serosalgu}%
+              </p>
+              <p>
+                청하: {reportTable.chungha}T - {reportPercentages.chungha}%
+              </p>
+              <br />
+              <p>갈매기 드시던 테이블까지 {totalGalmegi}개입니다.</p>
+            </section>
+          </div>
+        )}
         <button
-          className="my-2 bg-green-400 text-white rounded p-2 w-full"
-          onClick={handleSMReportClipboard}
+          type="button"
+          className="my-2 bg-blue-500 text-white rounded p-2 w-full"
+          onClick={handleBSKYReportClipboard}
         >
-          담당자님용 보고 복사하기
+          상권 톡방용 보고 복사하기
         </button>
-      )}
+        {selectedBusinessZone === "광안" && (
+          <button
+            type="button"
+            className="my-2 bg-green-400 text-white rounded p-2 w-full"
+            onClick={handleSMReportClipboard}
+          >
+            담당자님용 보고 복사하기
+          </button>
+        )}
+      </div>
     </div>
   );
 }

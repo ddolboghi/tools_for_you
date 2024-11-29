@@ -70,7 +70,7 @@ export default function Order({
           {Object.keys(orders).map((key) => (
             <div key={key} className="flex flex-row mb-2">
               <input
-                className="border border-gray-300 rounded p-1 w-1/4 mr-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mr-2 text-black"
                 placeholder="이름"
                 value={orders[Number(key)][0] || ""}
                 onChange={(e) =>
@@ -80,7 +80,7 @@ export default function Order({
               <input
                 type="number"
                 pattern="\d*"
-                className="border border-gray-300 rounded p-1 w-1/4 mr-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mr-2 text-black"
                 placeholder="0"
                 onChange={(e) =>
                   handleOrderChange(Number(key), 1, e.target.value)
@@ -89,7 +89,7 @@ export default function Order({
               <input
                 type="number"
                 pattern="\d*"
-                className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                 placeholder="0"
                 onChange={(e) =>
                   handleOrderChange(Number(key), 2, e.target.value)
@@ -100,7 +100,7 @@ export default function Order({
                   <input
                     type="number"
                     pattern="\d*"
-                    className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                    className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                     placeholder="0"
                     onChange={(e) =>
                       handleOrderChange(Number(key), 3, e.target.value)
@@ -109,7 +109,7 @@ export default function Order({
                   <input
                     type="number"
                     pattern="\d*"
-                    className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                    className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                     placeholder="0"
                     onChange={(e) =>
                       handleOrderChange(Number(key), 4, e.target.value)
@@ -120,7 +120,7 @@ export default function Order({
                 <input
                   type="number"
                   pattern="\d*"
-                  className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                  className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                   placeholder="0"
                   onChange={(e) =>
                     handleOrderChange(Number(key), 3, e.target.value)
@@ -169,7 +169,7 @@ export default function Order({
           {Object.keys(additionalOrders).map((key) => (
             <div key={key} className="flex flex-row mb-2">
               <input
-                className="border border-gray-300 rounded p-1 w-1/4 mr-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mr-2 text-black"
                 placeholder="이름"
                 value={orders[Number(key)][0] || ""}
                 onChange={(e) =>
@@ -179,7 +179,7 @@ export default function Order({
               <input
                 type="number"
                 pattern="\d*"
-                className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                 placeholder="0"
                 onChange={(e) =>
                   handleAdditionalOrderChange(Number(key), 1, e.target.value)
@@ -188,7 +188,7 @@ export default function Order({
               <input
                 type="number"
                 pattern="\d*"
-                className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                 placeholder="0"
                 onChange={(e) =>
                   handleAdditionalOrderChange(Number(key), 2, e.target.value)
@@ -199,7 +199,7 @@ export default function Order({
                   <input
                     type="number"
                     pattern="\d*"
-                    className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                    className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                     placeholder="0"
                     onChange={(e) =>
                       handleAdditionalOrderChange(
@@ -212,7 +212,7 @@ export default function Order({
                   <input
                     type="number"
                     pattern="\d*"
-                    className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                    className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                     placeholder="0"
                     onChange={(e) =>
                       handleAdditionalOrderChange(
@@ -227,7 +227,7 @@ export default function Order({
                 <input
                   type="number"
                   pattern="\d*"
-                  className="border border-gray-300 rounded p-1 w-1/4 mx-2"
+                  className="border border-gray-300 rounded p-1 w-1/4 mx-2 text-black"
                   placeholder="0"
                   onChange={(e) =>
                     handleAdditionalOrderChange(Number(key), 3, e.target.value)

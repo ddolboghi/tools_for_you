@@ -13,7 +13,7 @@ export default function BusinessZoneSelector({
     <select
       value={selectedBusinessZone}
       onChange={(e) => onSelectBusinessZone(e.target.value)}
-      className="text-sm border border-gray-300 rounded p-1"
+      className="text-sm border border-gray-300 rounded p-1 text-black"
     >
       {businessZones.map((businessZone) => (
         <option

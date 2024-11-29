@@ -172,7 +172,7 @@ export default function SaleCalculation() {
         <input
           type="number"
           pattern="\d*"
-          className="border border-gray-300 rounded p-1"
+          className="border border-gray-300 rounded p-1 text-black"
           placeholder="0"
           onChange={(e) => handleTotalBisness(e.target.value)}
         />

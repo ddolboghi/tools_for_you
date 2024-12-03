@@ -7,5 +7,3 @@ export const businessZones = [
   { id: 6, name: "서원시장" },
   { id: 7, name: "수영" },
 ];
-
-export const businessZonesWithGalmegi16 = ["남천 / 해변시장"];

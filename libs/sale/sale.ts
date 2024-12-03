@@ -107,17 +107,14 @@ export const getProviderPercentages = (percentages: PercentageType) => {
 };
 
 export const getGalmegiSums = (
-  hasGalmegi16: boolean,
   drink: Drink,
   orderSums: OrderSums,
   additionalOrderSums: OrderSums
 ) => {
   const originalGalmegi19Num = drink["Muhak"][3] || 0;
-  const originalGalmegi16Num = hasGalmegi16 ? drink["Muhak"][4] || 0 : 0;
+  const originalGalmegi16Num = drink["Muhak"][4] || 0;
   const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3];
-  const galmegi16OrderNum = hasGalmegi16
-    ? orderSums[4] + additionalOrderSums[4]
-    : 0;
+  const galmegi16OrderNum = orderSums[4] + additionalOrderSums[4];
   return {
     original19: originalGalmegi19Num,
     original16: originalGalmegi16Num,

@@ -1,11 +1,10 @@
 "use client";
 
 type MuhakProps = {
-  onSplit: boolean;
   handleDrink: (index: number, value: string) => void;
 };
 
-export default function Muhak({ onSplit, handleDrink }: MuhakProps) {
+export default function Muhak({ handleDrink }: MuhakProps) {
   return (
     <section className="mb-4 border border-gray-300 p-2">
       <h1 className="text-lg">무학</h1>
@@ -31,34 +30,9 @@ export default function Muhak({ onSplit, handleDrink }: MuhakProps) {
         />
         t
       </p>
-      {onSplit ? (
-        <div>
-          <p className="mt-2">
-            부산갈매기19 :{" "}
-            <input
-              type="number"
-              pattern="\d*"
-              className="border border-gray-300 rounded p-1 w-1/2 text-black"
-              placeholder="0"
-              onChange={(e) => handleDrink(3, e.target.value)}
-            />
-            t
-          </p>
-          <p className="mt-2">
-            부산갈매기16 :{" "}
-            <input
-              type="number"
-              pattern="\d*"
-              className="border border-gray-300 rounded p-1 w-1/2 text-black"
-              placeholder="0"
-              onChange={(e) => handleDrink(4, e.target.value)}
-            />
-            t
-          </p>
-        </div>
-      ) : (
+      <div>
         <p className="mt-2">
-          부산갈매기 :{" "}
+          부산갈매기19 :{" "}
           <input
             type="number"
             pattern="\d*"
@@ -68,7 +42,18 @@ export default function Muhak({ onSplit, handleDrink }: MuhakProps) {
           />
           t
         </p>
-      )}
+        <p className="mt-2">
+          부산갈매기16 :{" "}
+          <input
+            type="number"
+            pattern="\d*"
+            className="border border-gray-300 rounded p-1 w-1/2 text-black"
+            placeholder="0"
+            onChange={(e) => handleDrink(4, e.target.value)}
+          />
+          t
+        </p>
+      </div>
     </section>
   );
 }

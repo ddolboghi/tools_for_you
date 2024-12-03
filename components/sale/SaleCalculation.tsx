@@ -8,19 +8,11 @@ import Muhak from "./Muhak";
 import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
-import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
+import { Drink, Orders, Percentages } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
-import {
-  businessZones,
-  businessZonesWithGalmegi16,
-} from "@/utils/sale/businessZones";
-import { initOrder, initOrderWithGamlegi16 } from "@/data/sale/order";
-import GalmegiSplitSwitch from "./GalmegiSplitSwitch";
-import {
-  getInitOrder,
-  getInitOrderSums,
-  getOrderSums,
-} from "@/libs/sale/order";
+import { businessZones } from "@/utils/sale/businessZones";
+import { initOrder } from "@/data/sale/order";
+import { getOrderSums } from "@/libs/sale/order";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -44,7 +36,6 @@ export default function SaleCalculation() {
   const [selectedBusinessZone, setSelectedBusinessZone] = useState<string>(
     businessZones[0].name
   );
-  const [onSplit, setOnSplit] = useState(false);
   const [orderSums, setOrderSums] = useState(getOrderSums(orders));
   const [additionalOrderSums, setAdditionalOrderSums] = useState(
     getOrderSums(additionalOrders)
@@ -84,15 +75,14 @@ export default function SaleCalculation() {
   };
 
   const addOrderLine = () => {
-    const orderForm = onSplit ? initOrderWithGamlegi16 : initOrder;
     setOrders((prev) => ({
       ...prev,
-      [orderCount]: orderForm,
+      [orderCount]: initOrder,
     }));
 
     setAdditionalOrders((prev) => ({
       ...prev,
-      [orderCount]: orderForm,
+      [orderCount]: initOrder,
     }));
 
     setOrderCount(orderCount + 1);
@@ -148,55 +138,12 @@ export default function SaleCalculation() {
     }));
   };
 
-  const handleGalmegiSplit = () => {
-    const newOnSplit = !onSplit;
-    setOnSplit(newOnSplit);
-    initOrderAndOrderSums(newOnSplit);
-    initMuhakDrink(newOnSplit);
-  };
-
-  const initOrderAndOrderSums = (newOnSplit: boolean) => {
-    const newOrders: Orders = { ...orders };
-    const newAdditionalOrders: Orders = { ...additionalOrders };
-    setOrders(getInitOrder(newOnSplit, newOrders));
-    setAdditionalOrders(getInitOrder(newOnSplit, newAdditionalOrders));
-
-    const newOrderSums: OrderSums = {
-      ...orderSums,
-    };
-    const newAdditionalOrderSums: OrderSums = { ...additionalOrderSums };
-    setOrderSums(getInitOrderSums(newOnSplit, newOrderSums));
-    setAdditionalOrderSums(
-      getInitOrderSums(newOnSplit, newAdditionalOrderSums)
-    );
-  };
-
   const handleSelectBusinessZone = (selectedBusinessZone: string) => {
     setSelectedBusinessZone(selectedBusinessZone);
-    if (businessZonesWithGalmegi16.includes(selectedBusinessZone)) {
-      setOnSplit(true);
-      initOrderAndOrderSums(true);
-    } else {
-      setOnSplit(false);
-      initOrderAndOrderSums(false);
-    }
-  };
-
-  const initMuhakDrink = (newOnSplit: boolean) => {
-    const newDrink = { ...drink };
-    if (newOnSplit) {
-      newDrink["Muhak"][3] = 0;
-      newDrink["Muhak"][4] = 0;
-      setDrink(newDrink);
-    } else {
-      newDrink["Muhak"][3] = 0;
-      delete newDrink["Muhak"][4];
-      setDrink(newDrink);
-    }
   };
 
   return (
-    <div className={`p-4 ${onSplit && "bg-neutral-950 text-white"}`}>
+    <div className="p-4">
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">총 방문업소: </h1>
         <input
@@ -215,13 +162,8 @@ export default function SaleCalculation() {
           handleSelectBusinessZone={handleSelectBusinessZone}
         />
       </section>
-      <GalmegiSplitSwitch
-        onSplit={onSplit}
-        handleGalmegiSplit={handleGalmegiSplit}
-      />
       <form onSubmit={(e) => handleCalculateBtn(e)}>
         <Muhak
-          onSplit={onSplit}
           handleDrink={(index, value) => handleDrink("Muhak", index, value)}
         />
         <Hite
@@ -240,7 +182,6 @@ export default function SaleCalculation() {
           addOrderLine={addOrderLine}
           removeOrderLine={removeOrderLine}
           handleAdditionalOrderChange={handleAdditionalOrderChange}
-          onSplit={onSplit}
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
@@ -253,7 +194,6 @@ export default function SaleCalculation() {
       </form>
       {showResult && (
         <Result
-          onSplit={onSplit}
           drink={drink}
           percentages={percentages}
           totalBisness={totalBisness}

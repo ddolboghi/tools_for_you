@@ -6,7 +6,7 @@ import {
   getReportTables,
   getReportTitle,
   getWorkerNames,
-} from "@/libs/sale/reports";
+} from "@/lib/sale/reports";
 import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
@@ -14,7 +14,7 @@ import {
   getGalmegiSums,
   getProviderPercentages,
   getProviderSums,
-} from "@/libs/sale/sale";
+} from "@/lib/sale/sale";
 import SMGalmegiSummary from "./report/SMGalmegiSummary";
 
 type ResultProps = {

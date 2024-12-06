@@ -5,14 +5,15 @@ import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
 import Muhak from "./Muhak";
-import { calculateAdjustedPercentages, sumTableNum } from "@/libs/sale/sale";
+import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
 import { Drink, Orders, Percentages } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
 import { businessZones } from "@/utils/sale/businessZones";
 import { initOrder } from "@/data/sale/order";
-import { getOrderSums } from "@/libs/sale/order";
+import { getOrderSums } from "@/lib/sale/order";
+import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -204,6 +205,7 @@ export default function SaleCalculation() {
           additionalOrderSums={additionalOrderSums}
         />
       )}
+      <Galmegi16Report businessZone={selectedBusinessZone} />
     </div>
   );
 }

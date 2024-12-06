@@ -15,12 +15,15 @@ export default function Galmegi16Report({
   businessZone,
 }: Galmegi16ReportProps) {
   const [shopList, setShopList] = useState<Galmegi16Shop[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchShopList = async () => {
+    setIsLoading(true);
     const shopList = await getShops(businessZone);
     if (shopList) {
       setShopList(shopList);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -47,6 +50,7 @@ export default function Galmegi16Report({
         businessZone={businessZone}
         shopList={shopList}
         onFetch={() => fetchShopList()}
+        isLoading={isLoading}
       />
       <AddShop businessZone={businessZone} onAdd={() => fetchShopList()} />
       <button

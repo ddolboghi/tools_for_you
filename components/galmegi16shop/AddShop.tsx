@@ -26,6 +26,7 @@ function AddShop({ businessZone, onAdd }: AddShopProps) {
       setShopName("");
       return;
     }
+    setIsEmpty(false);
     setLoading(true);
     const result = await insertShop(businessZone, shopName);
     if (!result) {

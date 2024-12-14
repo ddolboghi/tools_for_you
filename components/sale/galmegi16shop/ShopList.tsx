@@ -1,6 +1,6 @@
 "use client";
 
-import ShopListSkeleton from "../ui/ShopListSkeleton";
+import ShopListSkeleton from "../../ui/ShopListSkeleton";
 import EditShop from "./EditShop";
 import { Galmegi16Shop } from "@/utils/sale/galmegi16ShopTypes";
 

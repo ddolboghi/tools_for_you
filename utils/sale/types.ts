@@ -36,3 +36,9 @@ export type GalmegiSums = {
   "16": number;
   total: number;
 };
+
+export type OtherCompanyPromotionResult = {
+  name: string;
+  workerNumber: number;
+  info: string;
+};

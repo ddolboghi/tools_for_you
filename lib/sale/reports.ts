@@ -1,4 +1,9 @@
-import { Drink, Orders, Percentages } from "@/utils/sale/types";
+import {
+  Drink,
+  Orders,
+  OtherCompanyPromotionResult,
+  Percentages,
+} from "@/utils/sale/types";
 import { translateToKoreanDayOfWeek } from "./dates";
 import {
   getGalmegiSums,
@@ -67,7 +72,8 @@ export const getReport = (
   totalBisness: number,
   selectedBusinessZone: string,
   orders: Orders,
-  additionalOrders: Orders
+  additionalOrders: Orders,
+  otherCompanyPromotions: OtherCompanyPromotionResult[]
 ) => {
   const workerNames = getWorkerNames(orders);
 
@@ -99,6 +105,13 @@ export const getReport = (
   const providerPercentages = getProviderPercentages(percentages);
 
   const galmegiSums = getGalmegiSums(drink, orderSums, additionalOrderSums);
+
+  const formattedPromotions = otherCompanyPromotions
+    .map(
+      (promotion) =>
+        `${promotion.name} ${promotion.workerNumber}명 / ${promotion.info}`
+    )
+    .join("\n");
 
   if (isForSm) {
     return `<이순조SM 퇴근보고>
@@ -174,5 +187,7 @@ ${workerReportOfOrders}
     additionalOrderSums[4] || 0
   }t(부산갈매기16)
 ${workerReportOfAdditionalOrders}
+3. 타사 판촉인원 / 판촉물 및 판촉내용
+${formattedPromotions}
 `;
 };

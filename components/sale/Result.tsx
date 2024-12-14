@@ -7,7 +7,13 @@ import {
   getReportTitle,
   getWorkerNames,
 } from "@/lib/sale/reports";
-import { Drink, Orders, OrderSums, Percentages } from "@/utils/sale/types";
+import {
+  Drink,
+  Orders,
+  OrderSums,
+  OtherCompanyPromotionResult,
+  Percentages,
+} from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
 import {
@@ -26,6 +32,7 @@ type ResultProps = {
   additionalOrders: Orders;
   orderSums: OrderSums;
   additionalOrderSums: OrderSums;
+  otherCompanyPromotions: OtherCompanyPromotionResult[];
 };
 
 export default function Result({
@@ -37,6 +44,7 @@ export default function Result({
   additionalOrders,
   orderSums,
   additionalOrderSums,
+  otherCompanyPromotions,
 }: ResultProps) {
   const workerNames = useMemo(() => getWorkerNames(orders), [orders]);
 
@@ -49,7 +57,8 @@ export default function Result({
         totalBisness,
         selectedBusinessZone,
         orders,
-        additionalOrders
+        additionalOrders,
+        otherCompanyPromotions
       ),
     [
       drink,
@@ -58,6 +67,7 @@ export default function Result({
       selectedBusinessZone,
       orders,
       additionalOrders,
+      otherCompanyPromotions,
     ]
   );
 
@@ -70,7 +80,8 @@ export default function Result({
         totalBisness,
         selectedBusinessZone,
         orders,
-        additionalOrders
+        additionalOrders,
+        otherCompanyPromotions
       ),
     [
       drink,
@@ -79,6 +90,7 @@ export default function Result({
       selectedBusinessZone,
       orders,
       additionalOrders,
+      otherCompanyPromotions,
     ]
   );
 
@@ -222,6 +234,19 @@ export default function Result({
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
+        {selectedBusinessZone === "수영" && (
+          <div>
+            <br />
+            <h1>3. 타사 판촉인원 / 판촉물 및 판촉내용</h1>
+            <div>
+              {otherCompanyPromotions.map((promotion) => (
+                <p key={promotion.name}>
+                  {promotion.name} {promotion.workerNumber}명 / {promotion.info}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
         {selectedBusinessZone === "광안" && (
           <div className="border border-blue-300">
             <h1>

@@ -8,12 +8,18 @@ import Muhak from "./Muhak";
 import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
-import { Drink, Orders, Percentages } from "@/utils/sale/types";
+import {
+  Drink,
+  Orders,
+  OtherCompanyPromotionResult,
+  Percentages,
+} from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
 import { businessZones } from "@/utils/sale/businessZones";
 import { initOrder } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
-import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
+import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
+import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -41,6 +47,9 @@ export default function SaleCalculation() {
   const [additionalOrderSums, setAdditionalOrderSums] = useState(
     getOrderSums(additionalOrders)
   );
+  const [otherCompanyPromotions, setOtherCompanyPromotions] = useState<
+    OtherCompanyPromotionResult[]
+  >([]);
 
   useEffect(() => {
     setOrderSums(getOrderSums(orders));
@@ -143,6 +152,25 @@ export default function SaleCalculation() {
     setSelectedBusinessZone(selectedBusinessZone);
   };
 
+  const handleOtherCompanyPromotion = (
+    promotionResult: OtherCompanyPromotionResult
+  ) => {
+    setOtherCompanyPromotions((prev) => {
+      const existingPromotionIndex = prev.findIndex(
+        (promotion) => promotion.name === promotionResult.name
+      );
+
+      if (existingPromotionIndex !== -1) {
+        const updatedPromotions = [...prev];
+        updatedPromotions[existingPromotionIndex] = promotionResult;
+        return updatedPromotions;
+      } else {
+        return [...prev, promotionResult];
+      }
+    });
+  };
+
+  console.log(otherCompanyPromotions);
   return (
     <div className="p-4">
       <section className="flex flex-row mb-4 items-center">
@@ -186,6 +214,11 @@ export default function SaleCalculation() {
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
+        {selectedBusinessZone === "수영" && (
+          <OtherCompanyPromotion
+            handleOtherCompanyPromotion={handleOtherCompanyPromotion}
+          />
+        )}
         <button
           type="submit"
           className="my-2 bg-blue-500 text-white rounded p-2 w-full"
@@ -203,6 +236,7 @@ export default function SaleCalculation() {
           additionalOrders={additionalOrders}
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
+          otherCompanyPromotions={otherCompanyPromotions}
         />
       )}
       <Galmegi16Report businessZone={selectedBusinessZone} />

@@ -13,6 +13,7 @@ import {
   OrderSums,
   OtherCompanyPromotionResult,
   Percentages,
+  PromotionStock,
 } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
@@ -33,6 +34,7 @@ type ResultProps = {
   orderSums: OrderSums;
   additionalOrderSums: OrderSums;
   otherCompanyPromotions: OtherCompanyPromotionResult[];
+  promotionStocks: PromotionStock[];
 };
 
 export default function Result({
@@ -45,6 +47,7 @@ export default function Result({
   orderSums,
   additionalOrderSums,
   otherCompanyPromotions,
+  promotionStocks,
 }: ResultProps) {
   const workerNames = useMemo(() => getWorkerNames(orders), [orders]);
 
@@ -58,7 +61,8 @@ export default function Result({
         selectedBusinessZone,
         orders,
         additionalOrders,
-        otherCompanyPromotions
+        otherCompanyPromotions,
+        promotionStocks
       ),
     [
       drink,
@@ -68,6 +72,7 @@ export default function Result({
       orders,
       additionalOrders,
       otherCompanyPromotions,
+      promotionStocks,
     ]
   );
 
@@ -81,7 +86,8 @@ export default function Result({
         selectedBusinessZone,
         orders,
         additionalOrders,
-        otherCompanyPromotions
+        otherCompanyPromotions,
+        promotionStocks
       ),
     [
       drink,
@@ -91,6 +97,7 @@ export default function Result({
       orders,
       additionalOrders,
       otherCompanyPromotions,
+      promotionStocks,
     ]
   );
 
@@ -239,9 +246,19 @@ export default function Result({
             <br />
             <h1>3. 타사 판촉인원 / 판촉물 및 판촉내용</h1>
             <div>
-              {otherCompanyPromotions.map((promotion) => (
-                <p key={promotion.name}>
-                  {promotion.name} {promotion.workerNumber}명 / {promotion.info}
+              {otherCompanyPromotions.map((promotion, index) => (
+                <p key={`${index}-${promotion.name}`}>
+                  {promotion.name} {promotion.workerNumber || 0}명 /{" "}
+                  {promotion.info}
+                </p>
+              ))}
+            </div>
+            <br />
+            <h1>4. ★자사 판촉물 재고량★ (박스로 기입해서 올려주세요)</h1>
+            <div>
+              {promotionStocks.map((stock, index) => (
+                <p key={`${index}-${stock.name}`}>
+                  &nbsp;- {stock.name} {stock.quantity || 0}박스
                 </p>
               ))}
             </div>

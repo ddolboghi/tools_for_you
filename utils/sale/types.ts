@@ -39,7 +39,7 @@ export type GalmegiSums = {
 
 export type OtherCompanyPromotionResult = {
   name: string;
-  workerNumber: number;
+  workerNumber: number | undefined;
   info: string;
 };
 

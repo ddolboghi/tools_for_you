@@ -8,12 +8,22 @@ import Muhak from "./Muhak";
 import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
-import { Drink, Orders, Percentages } from "@/utils/sale/types";
+import {
+  Drink,
+  Orders,
+  OtherCompanyPromotionResult,
+  Percentages,
+  PromotionStock,
+} from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
 import { businessZones } from "@/utils/sale/businessZones";
 import { initOrder } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
-import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
+import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
+import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
+import PromotionStockInput from "./promotionStock/PromotionStockInput";
+import { initPromotionStocks } from "@/utils/sale/promotionStock";
+import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
 
 export default function SaleCalculation() {
   const [drink, setDrink] = useState<Drink>({
@@ -41,6 +51,11 @@ export default function SaleCalculation() {
   const [additionalOrderSums, setAdditionalOrderSums] = useState(
     getOrderSums(additionalOrders)
   );
+  const [otherCompanyPromotions, setOtherCompanyPromotions] = useState<
+    OtherCompanyPromotionResult[]
+  >(initOtherCompanyPromotions);
+  const [promotionStocks, setPromotionStocks] =
+    useState<PromotionStock[]>(initPromotionStocks);
 
   useEffect(() => {
     setOrderSums(getOrderSums(orders));
@@ -143,6 +158,28 @@ export default function SaleCalculation() {
     setSelectedBusinessZone(selectedBusinessZone);
   };
 
+  const handleOtherCompanyPromotion = (
+    promotionResult: OtherCompanyPromotionResult
+  ) => {
+    setOtherCompanyPromotions((prev) => {
+      const existingPromotionIndex = prev.findIndex(
+        (promotion) => promotion.name === promotionResult.name
+      );
+
+      if (existingPromotionIndex !== -1) {
+        const updatedPromotions = [...prev];
+        updatedPromotions[existingPromotionIndex] = promotionResult;
+        return updatedPromotions;
+      } else {
+        return [...prev, promotionResult];
+      }
+    });
+  };
+
+  const handlePromotionStockChange = (stocks: PromotionStock[]) => {
+    setPromotionStocks(stocks);
+  };
+
   return (
     <div className="p-4">
       <section className="flex flex-row mb-4 items-center">
@@ -186,6 +223,18 @@ export default function SaleCalculation() {
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
+        {selectedBusinessZone === "수영" && (
+          <>
+            <OtherCompanyPromotion
+              otherCompanyPromotions={otherCompanyPromotions}
+              handleOtherCompanyPromotion={handleOtherCompanyPromotion}
+            />
+            <PromotionStockInput
+              promotionStocks={promotionStocks}
+              handlePromotionStockChange={handlePromotionStockChange}
+            />
+          </>
+        )}
         <button
           type="submit"
           className="my-2 bg-blue-500 text-white rounded p-2 w-full"
@@ -203,6 +252,8 @@ export default function SaleCalculation() {
           additionalOrders={additionalOrders}
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
+          otherCompanyPromotions={otherCompanyPromotions}
+          promotionStocks={promotionStocks}
         />
       )}
       <Galmegi16Report businessZone={selectedBusinessZone} />

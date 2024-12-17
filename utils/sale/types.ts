@@ -42,3 +42,8 @@ export type OtherCompanyPromotionResult = {
   workerNumber: number;
   info: string;
 };
+
+export type PromotionStock = {
+  name: string;
+  quantity: number | undefined;
+};

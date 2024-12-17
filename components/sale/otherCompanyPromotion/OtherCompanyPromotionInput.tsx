@@ -54,6 +54,7 @@ export default function OtherCompanyPromotionInput({
           value={
             promotionWorkerNumber !== undefined ? promotionWorkerNumber : ""
           }
+          placeholder="0"
           onChange={(e) => handlePromotionWorkerNumber(e.target.value)}
         />
         <span>명</span>

@@ -66,8 +66,7 @@ export const getReportPercentages = (percentages: Percentages) => {
   };
 };
 
-export const getReport = (
-  isForSm: boolean,
+export const getBSKYReport = (
   drink: Drink,
   percentages: Percentages,
   totalBisness: number,
@@ -106,8 +105,6 @@ export const getReport = (
   const providerSums = getProviderSums(drink);
   const providerPercentages = getProviderPercentages(percentages);
 
-  const galmegiSums = getGalmegiSums(drink, orderSums, additionalOrderSums);
-
   const formattedPromotions = otherCompanyPromotions
     .map(
       (promotion) =>
@@ -119,30 +116,7 @@ export const getReport = (
     .map((stock) => ` - ${stock.name} ${stock.quantity || 0}박스`)
     .join("\n");
 
-  if (isForSm) {
-    return `<이순조SM 퇴근보고>
-1. 야간판촉지역
-광안 바닷가
-2. 야간 음용비
-좋은데이 : ${reportTables.goodDay}T - ${reportPercentages.goodDay}%
-좋은데이 톡시리즈 : ${reportTables.toc}T - ${reportPercentages.toc}%
-갈매기19 : ${reportTables.galmegi19}T - ${reportPercentages.galmegi19}%
-갈매기16 : ${reportTables.galmegi16}T - ${reportPercentages.galmegi16}%
-대선 : ${reportTables.daesun}T - ${reportPercentages.daesun}% 
-강알리 : ${reportTables.gangali}T - ${reportPercentages.gangali}%
-진로 : ${reportTables.jinro}T - ${reportPercentages.jinro}%
-진로(골드) : ${reportTables.jinrogold}T - ${reportPercentages.jinrogold}%
-참이슬 : ${reportTables.chamisul}T - ${reportPercentages.chamisul}%
-C1: T - %
-기타
-새로: ${reportTables.sero}T - ${reportPercentages.sero}%
-새로(살구): ${reportTables.serosalgu}T - ${reportPercentages.serosalgu}%
-청하: ${reportTables.chungha}T - ${reportPercentages.chungha}%
-
-갈매기19 드시던 테이블 ${galmegiSums.original19},\n갈매기16 드시던 테이블 ${galmegiSums.original16},\n갈매기19 전/추 ${galmegiSums["19"]},\n갈매기16 전/추 ${galmegiSums["16"]},\n총 ${galmegiSums.total}개입니다.`;
-  }
-
-  return `${getReportTitle(selectedBusinessZone)}
+  let reportContent = `${getReportTitle(selectedBusinessZone)}
 1. 점유비
 \u0020\u0020- 총 방문업소: ${totalBisness}개
 \u0020\u0020- 총 테이블 수: ${providerSums.total}t
@@ -193,9 +167,50 @@ ${workerReportOfOrders}
     additionalOrderSums[4] || 0
   }t(부산갈매기16)
 ${workerReportOfAdditionalOrders}
-3. 타사 판촉인원 / 판촉물 및 판촉내용
+`;
+  if (selectedBusinessZone === "수영") {
+    reportContent += `3. 타사 판촉인원 / 판촉물 및 판촉내용
 ${formattedPromotions}\n
 4. ★자사 판촉물 재고량★ (박스로 기입해서 올려주세요)
-${formattedPromotionStocks}
-`;
+${formattedPromotionStocks}`;
+  }
+  return reportContent;
+};
+
+export const getSMReport = (
+  drink: Drink,
+  percentages: Percentages,
+  totalBisness: number,
+  orders: Orders,
+  additionalOrders: Orders
+) => {
+  const orderSums = getOrderSums(orders);
+  const additionalOrderSums = getOrderSums(additionalOrders);
+
+  const reportTables = getReportTables(drink);
+  const reportPercentages = getReportPercentages(percentages);
+
+  const galmegiSums = getGalmegiSums(drink, orderSums, additionalOrderSums);
+
+  return `<이순조SM 퇴근보고>
+1. 야간판촉지역
+광안 바닷가
+총 테이블 수 : ${totalBisness}
+2. 야간 음용비
+좋은데이 : ${reportTables.goodDay}T - ${reportPercentages.goodDay}%
+좋은데이 톡시리즈 : ${reportTables.toc}T - ${reportPercentages.toc}%
+갈매기19 : ${reportTables.galmegi19}T - ${reportPercentages.galmegi19}%
+갈매기16 : ${reportTables.galmegi16}T - ${reportPercentages.galmegi16}%
+대선 : ${reportTables.daesun}T - ${reportPercentages.daesun}% 
+강알리 : ${reportTables.gangali}T - ${reportPercentages.gangali}%
+진로 : ${reportTables.jinro}T - ${reportPercentages.jinro}%
+진로(골드) : ${reportTables.jinrogold}T - ${reportPercentages.jinrogold}%
+참이슬 : ${reportTables.chamisul}T - ${reportPercentages.chamisul}%
+C1: T - %
+기타
+새로: ${reportTables.sero}T - ${reportPercentages.sero}%
+새로(살구): ${reportTables.serosalgu}T - ${reportPercentages.serosalgu}%
+청하: ${reportTables.chungha}T - ${reportPercentages.chungha}%
+
+갈매기19 드시던 테이블 ${galmegiSums.original19},\n갈매기16 드시던 테이블 ${galmegiSums.original16},\n갈매기19 전/추 ${galmegiSums["19"]},\n갈매기16 전/추 ${galmegiSums["16"]},\n총 ${galmegiSums.total}개입니다.`;
 };

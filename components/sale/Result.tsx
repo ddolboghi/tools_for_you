@@ -1,10 +1,11 @@
 "use client";
 
 import {
-  getReport,
+  getBSKYReport,
   getReportPercentages,
   getReportTables,
   getReportTitle,
+  getSMReport,
   getWorkerNames,
 } from "@/lib/sale/reports";
 import {
@@ -53,8 +54,7 @@ export default function Result({
 
   const BSKYReport = useMemo(
     () =>
-      getReport(
-        false,
+      getBSKYReport(
         drink,
         percentages,
         totalBisness,
@@ -78,27 +78,8 @@ export default function Result({
 
   const smReport = useMemo(
     () =>
-      getReport(
-        true,
-        drink,
-        percentages,
-        totalBisness,
-        selectedBusinessZone,
-        orders,
-        additionalOrders,
-        otherCompanyPromotions,
-        promotionStocks
-      ),
-    [
-      drink,
-      percentages,
-      totalBisness,
-      selectedBusinessZone,
-      orders,
-      additionalOrders,
-      otherCompanyPromotions,
-      promotionStocks,
-    ]
+      getSMReport(drink, percentages, totalBisness, orders, additionalOrders),
+    [drink, percentages, totalBisness, orders, additionalOrders]
   );
 
   const providerSums = useMemo(() => getProviderSums(drink), [drink]);

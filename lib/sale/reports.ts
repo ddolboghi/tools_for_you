@@ -3,6 +3,7 @@ import {
   Orders,
   OtherCompanyPromotionResult,
   Percentages,
+  PromotionStock,
 } from "@/utils/sale/types";
 import { translateToKoreanDayOfWeek } from "./dates";
 import {
@@ -73,7 +74,8 @@ export const getReport = (
   selectedBusinessZone: string,
   orders: Orders,
   additionalOrders: Orders,
-  otherCompanyPromotions: OtherCompanyPromotionResult[]
+  otherCompanyPromotions: OtherCompanyPromotionResult[],
+  promotionStocks: PromotionStock[]
 ) => {
   const workerNames = getWorkerNames(orders);
 
@@ -109,8 +111,12 @@ export const getReport = (
   const formattedPromotions = otherCompanyPromotions
     .map(
       (promotion) =>
-        `${promotion.name} ${promotion.workerNumber}명 / ${promotion.info}`
+        `${promotion.name} ${promotion.workerNumber || 0}명 / ${promotion.info}`
     )
+    .join("\n");
+
+  const formattedPromotionStocks = promotionStocks
+    .map((stock) => ` - ${stock.name} ${stock.quantity || 0}박스`)
     .join("\n");
 
   if (isForSm) {
@@ -188,6 +194,8 @@ ${workerReportOfOrders}
   }t(부산갈매기16)
 ${workerReportOfAdditionalOrders}
 3. 타사 판촉인원 / 판촉물 및 판촉내용
-${formattedPromotions}
+${formattedPromotions}\n
+4. ★자사 판촉물 재고량★ (박스로 기입해서 올려주세요)
+${formattedPromotionStocks}
 `;
 };

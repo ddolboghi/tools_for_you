@@ -21,7 +21,7 @@ export const sumPercentages = (percentagesOfCompany: {
 type PercentageType = { [key: string]: { [key: number]: number } };
 
 export const calculateAdjustedPercentages = (
-  drink: { [key: string]: { [key: number]: number } },
+  drink: Drink,
   tableNum: number
 ): PercentageType => {
   const newPercentages: PercentageType = {};

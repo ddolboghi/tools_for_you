@@ -253,6 +253,7 @@ export default function Result({
             <section>
               <h1>1. 야간판촉지역</h1>
               <p>광안 바닷가</p>
+              <p>총 테이블 수 : {providerSums.total}</p>
             </section>
             <section>
               <h1>2. 야간 음용비</h1>

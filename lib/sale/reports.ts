@@ -192,10 +192,15 @@ export const getSMReport = (
 
   const galmegiSums = getGalmegiSums(drink, orderSums, additionalOrderSums);
 
+  const totalTables = Object.values(reportTables).reduce(
+    (acc, value) => acc + value,
+    0
+  );
+
   return `<이순조SM 퇴근보고>
 1. 야간판촉지역
 광안 바닷가
-총 테이블 수 : ${totalBisness}
+총 테이블 수 : ${totalTables}
 2. 야간 음용비
 좋은데이 : ${reportTables.goodDay}T - ${reportPercentages.goodDay}%
 좋은데이 톡시리즈 : ${reportTables.toc}T - ${reportPercentages.toc}%

@@ -47,3 +47,35 @@ export type PromotionStock = {
   name: string;
   quantity: number | undefined;
 };
+
+export type ReportTables = {
+  goodDay: number;
+  toc: number;
+  galmegi19: number;
+  galmegi16: number;
+  daesun: number;
+  gangali: number;
+  daesunEtc: number;
+  chamisul: number;
+  jinro: number;
+  jinrogold: number;
+  sero: number;
+  serosalgu: number;
+  chungha: number;
+};
+
+export type ReportPercentages = {
+  goodDay: string | number;
+  toc: string | number;
+  galmegi19: string | number;
+  galmegi16: string | number;
+  daesun: string | number;
+  gangali: string | number;
+  daesunEtc: string | number;
+  chamisul: string | number;
+  jinro: string | number;
+  jinrogold: string | number;
+  sero: string | number;
+  serosalgu: string | number;
+  chungha: string | number;
+};

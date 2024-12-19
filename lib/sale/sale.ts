@@ -54,7 +54,7 @@ export const calculateAdjustedPercentages = (
 
     // 가장 작은 값부터 +-0.1 더하기
     let i = 0;
-    while (Math.abs(diff) > 0.001) {
+    while (allPercentages.length > 0 && Math.abs(diff) > 0.001) {
       // 부동소수점 오차를 고려한 종료 조건
       const [company, index] = allPercentages[i % allPercentages.length];
 
@@ -113,8 +113,8 @@ export const getGalmegiSums = (
 ) => {
   const originalGalmegi19Num = drink["Muhak"][3] || 0;
   const originalGalmegi16Num = drink["Muhak"][4] || 0;
-  const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3];
-  const galmegi16OrderNum = orderSums[4] + additionalOrderSums[4];
+  const galmegi19OrderNum = orderSums[3] + additionalOrderSums[3] || 0;
+  const galmegi16OrderNum = orderSums[4] + additionalOrderSums[4] || 0;
   return {
     original19: originalGalmegi19Num,
     original16: originalGalmegi16Num,

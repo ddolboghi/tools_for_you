@@ -7,4 +7,5 @@ export const businessZones = [
   { id: 6, name: "서원시장" },
   { id: 7, name: "수영" },
   { id: 8, name: "문현" },
+  { id: 9, name: "시청" },
 ];

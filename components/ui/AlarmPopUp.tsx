@@ -32,7 +32,7 @@ export default function AlarmPopUp() {
   return (
     isVisible && (
       <div className="fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-50 z-50 flex justify-center items-center">
-        <div className="absolute top-10 left-[50%] translate-x-[-50%] bg-white w-[80%] items-center rounded p-2">
+        <div className="absolute top-10 left-[50%] translate-x-[-50%] bg-white w-[80%] items-center rounded-t p-2">
           <h1 className="font-semibold text-xl">안내</h1>
           <hr />
           <div className="text-lg">

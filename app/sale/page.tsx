@@ -1,11 +1,9 @@
 import SaleCalculation from "@/components/sale/SaleCalculation";
-import AlarmPopUp from "@/components/ui/AlarmPopUp";
 import Link from "next/link";
 
 export default function page() {
   return (
     <main>
-      <AlarmPopUp />
       <SaleCalculation />
       <footer className="text-center text-sm text-gray-500 py-2 bg-[#F6F8FA]">
         <Link

@@ -16,7 +16,7 @@ import {
   PromotionStock,
 } from "@/utils/sale/types";
 import BusinessZoneSelector from "./BusinessZoneSelector";
-import { businessZones } from "@/utils/sale/businessZones";
+import { additionalInfoBusinessZones, businessZones } from "@/utils/sale/businessZones";
 import { initOrder } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
@@ -223,7 +223,7 @@ export default function SaleCalculation() {
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
-        {selectedBusinessZone === "수영" && (
+        {additionalInfoBusinessZones.includes(selectedBusinessZone) && (
           <>
             <OtherCompanyPromotion
               otherCompanyPromotions={otherCompanyPromotions}

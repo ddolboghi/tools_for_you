@@ -1,18 +1,16 @@
-import SaleCalculation from "@/components/sale/SaleCalculation";
+import SaleCalculation from "@/components/sale/2.0/SaleCalculation";
 import Link from "next/link";
 
 export default function page() {
   return (
     <main>
+      <Link
+        href="/sale/1.0"
+        className="text-sm ml-4 p-1 rounded bg-black text-white"
+      >
+        이전 버전 사용하기
+      </Link>
       <SaleCalculation />
-      <footer className="text-center text-sm text-gray-500 py-2 bg-[#F6F8FA]">
-        <Link
-          href={"https://open.kakao.com/o/s9Kbw37g"}
-          className="underline font-bold"
-        >
-          카카오톡 오픈채팅으로 문의
-        </Link>
-      </footer>
     </main>
   );
 }

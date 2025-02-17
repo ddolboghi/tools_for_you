@@ -5,9 +5,9 @@ import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
 import Muhak from "./Muhak";
-import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/sale";
-import Result from "./Result";
-import Order from "./Order";
+import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/1.0/sale";
+import Result from "../1.0/Result";
+import Order from "../1.0/Order";
 import {
   Drink,
   Orders,
@@ -15,13 +15,16 @@ import {
   Percentages,
   PromotionStock,
 } from "@/utils/sale/types";
-import BusinessZoneSelector from "./BusinessZoneSelector";
-import { additionalInfoBusinessZones, businessZones } from "@/utils/sale/businessZones";
-import { initOrder } from "@/data/sale/order";
+import BusinessZoneSelector from "../BusinessZoneSelector";
+import {
+  additionalInfoBusinessZones,
+  businessZones,
+} from "@/utils/sale/businessZones";
+import { initOrder1 } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
-import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
-import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
-import PromotionStockInput from "./promotionStock/PromotionStockInput";
+import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
+import OtherCompanyPromotion from "../otherCompanyPromotion/OtherCompanyPromotion";
+import PromotionStockInput from "../promotionStock/PromotionStockInput";
 import { initPromotionStocks } from "@/utils/sale/promotionStock";
 import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
 
@@ -93,12 +96,12 @@ export default function SaleCalculation() {
   const addOrderLine = () => {
     setOrders((prev) => ({
       ...prev,
-      [orderCount]: initOrder,
+      [orderCount]: initOrder1,
     }));
 
     setAdditionalOrders((prev) => ({
       ...prev,
-      [orderCount]: initOrder,
+      [orderCount]: initOrder1,
     }));
 
     setOrderCount(orderCount + 1);

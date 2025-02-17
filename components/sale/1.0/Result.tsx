@@ -4,10 +4,8 @@ import {
   getBSKYReport,
   getReportPercentages,
   getReportTables,
-  getReportTitle,
   getSMReport,
-  getWorkerNames,
-} from "@/lib/sale/reports";
+} from "@/lib/sale/1.0/report";
 import {
   Drink,
   Orders,
@@ -22,10 +20,11 @@ import {
   getGalmegiSums,
   getProviderPercentages,
   getProviderSums,
-} from "@/lib/sale/sale";
-import SMReport from "./report/SMReport";
-import PromotionStockReport from "./report/PromotionStockReport";
-import OtherCompanyPromotionReport from "./report/OtherCompanyPromotionReport";
+} from "@/lib/sale/1.0/sale";
+import SMReport from "./SMReport";
+import PromotionStockReport from "../report/PromotionStockReport";
+import OtherCompanyPromotionReport from "../report/OtherCompanyPromotionReport";
+import { getReportTitle, getWorkerNames } from "@/lib/sale/commonReports";
 
 type ResultProps = {
   drink: Drink;

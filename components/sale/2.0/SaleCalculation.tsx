@@ -5,39 +5,33 @@ import Daesun from "./Daesun";
 import Hite from "./Hite";
 import Lotte from "./Lotte";
 import Muhak from "./Muhak";
-import { calculateAdjustedPercentages, sumTableNum } from "@/lib/sale/sale";
+import { calculatePercentages } from "@/lib/sale/2.0/sale";
 import Result from "./Result";
 import Order from "./Order";
 import {
-  Drink,
+  BskyReport,
   Orders,
   OtherCompanyPromotionResult,
-  Percentages,
   PromotionStock,
 } from "@/utils/sale/types";
-import BusinessZoneSelector from "./BusinessZoneSelector";
-import { additionalInfoBusinessZones, businessZones } from "@/utils/sale/businessZones";
-import { initOrder } from "@/data/sale/order";
+import BusinessZoneSelector from "../BusinessZoneSelector";
+import {
+  additionalInfoBusinessZones,
+  businessZones,
+} from "@/utils/sale/businessZones";
+import { initOrder2 } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
-import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
-import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
-import PromotionStockInput from "./promotionStock/PromotionStockInput";
+import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
+import OtherCompanyPromotion from "../otherCompanyPromotion/OtherCompanyPromotion";
+import PromotionStockInput from "../promotionStock/PromotionStockInput";
 import { initPromotionStocks } from "@/utils/sale/promotionStock";
 import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
+import { Button } from "@/components/ui/button";
+import { bskyReport } from "@/data/sale/report";
 
 export default function SaleCalculation() {
-  const [drink, setDrink] = useState<Drink>({
-    Muhak: {},
-    Hite: {},
-    Daesun: {},
-    Lotte: {},
-  });
-  const [percentages, setPercentages] = useState<Percentages>({
-    Muhak: {},
-    Hite: {},
-    Daesun: {},
-    Lotte: {},
-  });
+  const [updatedBskyReport, setUpdatedBskyReport] =
+    useState<BskyReport>(bskyReport);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [totalBisness, setTotalBisness] = useState<number>(0);
   const [orders, setOrders] = useState<Orders>({});
@@ -65,40 +59,34 @@ export default function SaleCalculation() {
     setAdditionalOrderSums(getOrderSums(additionalOrders));
   }, [additionalOrders]);
 
-  const handleDrink = (company: string, index: number, value: string) => {
-    setDrink((prev) => ({
+  const handleDrink = (company: string, drink: string, value: string) => {
+    setUpdatedBskyReport((prev) => ({
       ...prev,
       [company]: {
         ...prev[company],
-        [index]: Number(value),
+        [drink]: { ...prev[company][drink], tables: Number(value) },
       },
     }));
   };
-
   const handleTotalBisness = (value: string) => {
     setTotalBisness(Number(value));
   };
 
   const handleCalculateBtn = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const muhakTotal = sumTableNum(drink["Muhak"]);
-    const hiteTotal = sumTableNum(drink["Hite"]);
-    const daesunTotal = sumTableNum(drink["Daesun"]);
-    const lotteTotal = sumTableNum(drink["Lotte"]);
-    const tableNum = muhakTotal + hiteTotal + daesunTotal + lotteTotal;
-    setPercentages(calculateAdjustedPercentages(drink, tableNum));
+    setUpdatedBskyReport(calculatePercentages(updatedBskyReport));
     setShowResult(true);
   };
 
   const addOrderLine = () => {
     setOrders((prev) => ({
       ...prev,
-      [orderCount]: initOrder,
+      [orderCount]: initOrder2,
     }));
 
     setAdditionalOrders((prev) => ({
       ...prev,
-      [orderCount]: initOrder,
+      [orderCount]: initOrder2,
     }));
 
     setOrderCount(orderCount + 1);
@@ -152,6 +140,16 @@ export default function SaleCalculation() {
         [key]: key === 0 ? value : numValue,
       },
     }));
+
+    if (key === 0) {
+      setOrders((prev) => ({
+        ...prev,
+        [index]: {
+          ...prev[index],
+          [key]: value,
+        },
+      }));
+    }
   };
 
   const handleSelectBusinessZone = (selectedBusinessZone: string) => {
@@ -179,7 +177,6 @@ export default function SaleCalculation() {
   const handlePromotionStockChange = (stocks: PromotionStock[]) => {
     setPromotionStocks(stocks);
   };
-
   return (
     <div className="p-4">
       <section className="flex flex-row mb-4 items-center">
@@ -201,18 +198,10 @@ export default function SaleCalculation() {
         />
       </section>
       <form onSubmit={(e) => handleCalculateBtn(e)}>
-        <Muhak
-          handleDrink={(index, value) => handleDrink("Muhak", index, value)}
-        />
-        <Hite
-          handleDrink={(index, value) => handleDrink("Hite", index, value)}
-        />
-        <Daesun
-          handleDrink={(index, value) => handleDrink("Daesun", index, value)}
-        />
-        <Lotte
-          handleDrink={(index, value) => handleDrink("Lotte", index, value)}
-        />
+        <Muhak handleDrink={handleDrink} />
+        <Hite handleDrink={handleDrink} />
+        <Daesun handleDrink={handleDrink} />
+        <Lotte handleDrink={handleDrink} />
         <Order
           orders={orders}
           additionalOrders={additionalOrders}
@@ -235,17 +224,16 @@ export default function SaleCalculation() {
             />
           </>
         )}
-        <button
+        <Button
           type="submit"
           className="my-2 bg-blue-500 text-white rounded p-2 w-full"
         >
           계산하기
-        </button>
+        </Button>
       </form>
       {showResult && (
         <Result
-          drink={drink}
-          percentages={percentages}
+          bskyReport={updatedBskyReport}
           totalBisness={totalBisness}
           selectedBusinessZone={selectedBusinessZone}
           orders={orders}

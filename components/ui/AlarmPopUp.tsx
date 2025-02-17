@@ -13,7 +13,7 @@ export default function AlarmPopUp() {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    const endTime = new Date("2025-1-6");
+    const endTime = new Date("2025-2-24");
     if (isAfterThenEndTime(endTime)) {
       setIsVisible(false);
     } else {
@@ -59,25 +59,26 @@ export default function AlarmPopUp() {
             <p>
               안녕하세요. 개발자 정재윤입니다.
               <br />
-              12월 31일부로 판촉 알바를 그만두게 되었지만,
+              <span className="text-sky-600 font-semibold">
+                25.02.17에 새로운 보고양식으로 업데이트했습니다!
+              </span>
+              <br />
+              이전 버전을 사용하고 싶으시다면 사이트 상단 &apos;이전 버전
+              사용하기&apos;를 클릭해주세요.
             </p>
-            <p className="font-semibold">사이트 운영은 계속됩니다!</p>
-            <p className="text-red-500 font-semibold">
-              다만 보고 양식이 변경되면 제가 알기 어려우니,
-            </p>
+            <br />
             <p>
-              변경 사항이 있으면 언제든{" "}
+              이상하게 작동한다면{" "}
               <Link
                 href={"https://open.kakao.com/o/s9Kbw37g"}
                 className="underline font-bold bg-[#FEE500]"
               >
                 카톡 오픈채팅
               </Link>
-              으로 알려주세요. (채팅방 주소는 사이트 하단에도 있어요.)
+              으로 알려주세요.
             </p>
-            <p>이외에도 불편한 점이나 협업 제안이 있다면 편하게 연락 주세요.</p>
             <p>오늘도 수고하셨습니다.😊</p>
-            <p>(안내문은 1월 6일까지 표시됩니다.)</p>
+            <p>(안내문은 일주일동안 표시됩니다.)</p>
           </div>
           <div className="absolute -bottom-10 left-0 w-full bg-gray-200 flex flex-row justify-between pt-1 pb-10">
             <button onClick={handleCloseForever} className="pl-2">

@@ -12,7 +12,7 @@ type OrdersDataType = {
 
 export type Orders = OrdersDataType;
 
-export type OrderSums = { [key: number]: number };
+export type OrderSums = { [key: string]: number };
 
 export type ProviderSums = {
   muhak: number;
@@ -78,4 +78,17 @@ export type ReportPercentages = {
   sero: string | number;
   serosalgu: string | number;
   chungha: string | number;
+};
+
+type ReportResult = {
+  tables: number;
+  percentage: number;
+};
+
+export type ReportCompany = {
+  [key: string]: ReportResult;
+};
+
+export type BskyReport = {
+  [key: string]: ReportCompany;
 };

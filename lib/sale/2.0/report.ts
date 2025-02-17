@@ -101,7 +101,7 @@ export const getBSKYReport = (
 \u0020\u0020- 청하(별빛청하 포함): ${
     bskyReport["라. 롯데"]["청하(별빛청하 포함)"].tables
   }t (${bskyReport["라. 롯데"]["청하(별빛청하 포함)"].percentage}%)\n
-마. 기타 0t (0%)\n
+마. 기타: 0t (0%)\n
 2. 전환 및 추가주문\n
 가. 근무인원\n
 부산 갈매기 총 판매 병 수

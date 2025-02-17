@@ -124,11 +124,14 @@ export default function Result({
           {Object.entries(updatedBskyReport).map(
             ([company, occupancyReslut]) => (
               <div key={company}>
-                <h3>{company}</h3>:{" "}
-                <span>
-                  {getTotalOccupancyNumByCompany(bskyReport[company], false)}t (
-                  {getTotalOccupancyNumByCompany(bskyReport[company], true)}%)
-                </span>
+                <div className="flex flex-row items-center">
+                  <h3>{company}:&nbsp;</h3>
+                  <span>
+                    {getTotalOccupancyNumByCompany(bskyReport[company], false)}t
+                    ({getTotalOccupancyNumByCompany(bskyReport[company], true)}
+                    %)
+                  </span>
+                </div>
                 {Object.entries(occupancyReslut).map(([drink, result]) => (
                   <p key={drink}>
                     &nbsp;&nbsp;- {drink}: {result.tables}t ({result.percentage}
@@ -139,7 +142,7 @@ export default function Result({
               </div>
             )
           )}
-          <p>마. 기타 0t (0%)</p>
+          <p>마. 기타: 0t (0%)</p>
         </section>
         <br />
         <h2>2. 전환 및 추가주문</h2>

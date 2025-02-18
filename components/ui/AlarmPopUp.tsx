@@ -66,6 +66,9 @@ export default function AlarmPopUp() {
               이전 버전을 사용하고 싶으시다면 사이트 상단 &apos;이전 버전
               사용하기&apos;를 클릭해주세요.
             </p>
+            <p className="font-semibold">
+              이전 버전은 2월 28일까지만 사용하실 수 있습니다.
+            </p>
             <br />
             <p>
               이상하게 작동한다면{" "}

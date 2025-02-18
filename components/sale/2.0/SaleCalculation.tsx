@@ -1,10 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import Daesun from "./Daesun";
-import Hite from "./Hite";
-import Lotte from "./Lotte";
-import Muhak from "./Muhak";
 import { calculatePercentages } from "@/lib/sale/2.0/sale";
 import Result from "./Result";
 import Order from "./Order";
@@ -177,6 +173,7 @@ export default function SaleCalculation() {
   const handlePromotionStockChange = (stocks: PromotionStock[]) => {
     setPromotionStocks(stocks);
   };
+
   return (
     <div className="p-4">
       <section className="flex flex-row mb-4 items-center">
@@ -198,10 +195,27 @@ export default function SaleCalculation() {
         />
       </section>
       <form onSubmit={(e) => handleCalculateBtn(e)}>
-        <Muhak handleDrink={handleDrink} />
-        <Hite handleDrink={handleDrink} />
-        <Daesun handleDrink={handleDrink} />
-        <Lotte handleDrink={handleDrink} />
+        {Object.entries(bskyReport).map(([company, drinks], index) => (
+          <section
+            key={`company-${index}`}
+            className="mb-4 border border-gray-300 p-2"
+          >
+            <h1 className="text-lg">{company}</h1>
+            {Object.keys(drinks).map((drink, index) => (
+              <div key={`drink-${index}`} className="mt-2">
+                <span className="pr-1">{drink}:</span>
+                <input
+                  type="number"
+                  pattern="\d*"
+                  className="border border-gray-300 rounded p-1 w-1/2 text-black"
+                  placeholder="0"
+                  onChange={(e) => handleDrink(company, drink, e.target.value)}
+                />
+                t
+              </div>
+            ))}
+          </section>
+        ))}
         <Order
           orders={orders}
           additionalOrders={additionalOrders}

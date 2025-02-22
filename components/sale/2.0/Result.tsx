@@ -23,6 +23,7 @@ import {
   getTotalTableNum,
 } from "@/lib/sale/2.0/sale";
 import { getGalmegiSumByWorker } from "@/lib/sale/order";
+import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 
 type ResultProps = {
   bskyReport: BskyReport;
@@ -164,7 +165,7 @@ export default function Result({
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
-        {selectedBusinessZone === "수영" && (
+        {additionalInfoBusinessZones.includes(selectedBusinessZone) && (
           <div>
             <br />
             <OtherCompanyPromotionReport

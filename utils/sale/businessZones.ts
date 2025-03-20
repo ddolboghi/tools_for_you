@@ -11,6 +11,7 @@ export const businessZones = [
   { id: 10, name: "서동" },
   { id: 11, name: "부산대" },
   { id: 12, name: "용호" },
+  { id: 13, name: "구서" },
 ];
 
 export const additionalInfoBusinessZones = ["수영", "부산대"];

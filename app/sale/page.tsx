@@ -1,4 +1,4 @@
-import SaleCalculation from "@/components/sale/2.0/SaleCalculation";
+import SaleCalculation from "@/components/sale/SaleCalculation";
 
 export default function page() {
   return (

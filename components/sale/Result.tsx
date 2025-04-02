@@ -4,7 +4,7 @@ import {
   getBSKYReport,
   getGalmegiSums,
   getSMReport,
-} from "@/lib/sale/2.0/report";
+} from "@/lib/sale/report";
 import {
   BskyReport,
   Orders,
@@ -14,16 +14,16 @@ import {
 } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
-import SMReport from "../2.0/SMReport";
-import PromotionStockReport from "../report/PromotionStockReport";
-import OtherCompanyPromotionReport from "../report/OtherCompanyPromotionReport";
 import { getReportTitle } from "@/lib/sale/commonReports";
 import {
   getTotalOccupancyNumByCompany,
   getTotalTableNum,
-} from "@/lib/sale/2.0/sale";
+} from "@/lib/sale/sale";
 import { getGalmegiSumByWorker } from "@/lib/sale/order";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
+import OtherCompanyPromotionReport from "./report/OtherCompanyPromotionReport";
+import PromotionStockReport from "./report/PromotionStockReport";
+import SMReport from "./SMReport";
 
 type ResultProps = {
   bskyReport: BskyReport;

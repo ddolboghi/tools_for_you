@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { calculatePercentages } from "@/lib/sale/2.0/sale";
+import { calculatePercentages } from "@/lib/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
 import {
@@ -10,20 +10,21 @@ import {
   OtherCompanyPromotionResult,
   PromotionStock,
 } from "@/utils/sale/types";
-import BusinessZoneSelector from "../BusinessZoneSelector";
+
 import {
   additionalInfoBusinessZones,
   businessZones,
 } from "@/utils/sale/businessZones";
 import { initOrder2 } from "@/data/sale/order";
 import { getOrderSums } from "@/lib/sale/order";
-import Galmegi16Report from "../galmegi16shop/Galmegi16Report";
-import OtherCompanyPromotion from "../otherCompanyPromotion/OtherCompanyPromotion";
-import PromotionStockInput from "../promotionStock/PromotionStockInput";
 import { initPromotionStocks } from "@/utils/sale/promotionStock";
 import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
 import { Button } from "@/components/ui/button";
 import { bskyReport } from "@/data/sale/report";
+import BusinessZoneSelector from "./BusinessZoneSelector";
+import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
+import PromotionStockInput from "./promotionStock/PromotionStockInput";
+import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
 
 export default function SaleCalculation() {
   const [updatedBskyReport, setUpdatedBskyReport] =

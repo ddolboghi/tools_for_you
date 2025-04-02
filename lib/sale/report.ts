@@ -5,8 +5,8 @@ import {
   PromotionStock,
 } from "@/utils/sale/types";
 import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./sale";
-import { getGalmegiSumByWorker, getOrderSums } from "../order";
-import { getReportTitle } from "../commonReports";
+import { getGalmegiSumByWorker, getOrderSums } from "./order";
+import { getReportTitle } from "./commonReports";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 
 export const getBSKYReport = (

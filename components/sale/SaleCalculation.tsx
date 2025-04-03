@@ -71,6 +71,10 @@ export default function SaleCalculation() {
 
   const handleCalculateBtn = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (totalBisness === 0) {
+      alert("방문업소 수를 입력해주세요!");
+      return;
+    }
     setUpdatedBskyReport(calculatePercentages(updatedBskyReport));
     setShowResult(true);
   };
@@ -176,7 +180,7 @@ export default function SaleCalculation() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-[500px]">
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">총 방문업소: </h1>
         <input
@@ -241,7 +245,7 @@ export default function SaleCalculation() {
         )}
         <Button
           type="submit"
-          className="my-2 bg-blue-500 text-white rounded p-2 w-full"
+          className="my-2 bg-blue-500 text-white font-semibold rounded p-2 w-full"
         >
           계산하기
         </Button>

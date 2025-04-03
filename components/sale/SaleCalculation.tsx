@@ -249,6 +249,9 @@ export default function SaleCalculation() {
         >
           계산하기
         </Button>
+        <p className="text-xs text-gray-600">
+          ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.
+        </p>
       </form>
       {showResult && (
         <Result

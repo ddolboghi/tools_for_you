@@ -51,12 +51,10 @@ export default function Result({
   otherCompanyPromotions,
   promotionStocks,
 }: ResultProps) {
-  const updatedBskyReport = bskyReport;
-
   const BSKYReport = useMemo(
     () =>
       getBSKYReport(
-        updatedBskyReport,
+        bskyReport,
         totalBisness,
         selectedBusinessZone,
         orders,
@@ -65,7 +63,7 @@ export default function Result({
         promotionStocks
       ),
     [
-      updatedBskyReport,
+      bskyReport,
       totalBisness,
       selectedBusinessZone,
       orders,
@@ -76,18 +74,18 @@ export default function Result({
   );
 
   const smReport = useMemo(
-    () => getSMReport(updatedBskyReport, orders, additionalOrders),
-    [updatedBskyReport, orders, additionalOrders]
+    () => getSMReport(bskyReport, orders, additionalOrders),
+    [bskyReport, orders, additionalOrders]
   );
 
   const galmegiSums = useMemo(
-    () => getGalmegiSums(updatedBskyReport, orders, additionalOrders),
-    [updatedBskyReport, orders, additionalOrders]
+    () => getGalmegiSums(bskyReport, orders, additionalOrders),
+    [bskyReport, orders, additionalOrders]
   );
 
   const totalTableNum = useMemo(
-    () => getTotalTableNum(updatedBskyReport),
-    [updatedBskyReport]
+    () => getTotalTableNum(bskyReport),
+    [bskyReport]
   );
 
   const galmegiSumByWorker = useMemo(
@@ -131,7 +129,7 @@ export default function Result({
                 <p>&nbsp;&nbsp;- 총 테이블 수: {totalTableNum}t</p>
                 <br />
                 <section>
-                  {Object.entries(updatedBskyReport).map(
+                  {Object.entries(bskyReport).map(
                     ([company, occupancyReslut]) => (
                       <div key={company}>
                         <div className="flex flex-row items-center">
@@ -197,7 +195,7 @@ export default function Result({
               </div>
               {selectedBusinessZone === "광안" && (
                 <SMReport
-                  bskyReport={updatedBskyReport}
+                  bskyReport={bskyReport}
                   totalTableNum={totalTableNum}
                   galmegiSums={galmegiSums}
                 />

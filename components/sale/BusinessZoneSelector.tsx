@@ -17,13 +17,13 @@ export default function BusinessZoneSelector({
   const handleSelect = (businessZoneName: string) => {
     handleSelectBusinessZone(businessZoneName);
     setIsOpen(false);
-  }
+  };
 
   return (
-    <div className="relative w-64">
+    <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center text-sm border border-gray-300 rounded p-1 text-black w-1/2 text-left"
+        className="flex justify-between items-center text-sm border border-gray-300 rounded p-1 text-black w-32 text-left"
       >
         {selectedBusinessZone || "상권을 선택해주세요."}
         <ChevronDown
@@ -33,7 +33,7 @@ export default function BusinessZoneSelector({
         />
       </button>
       {isOpen && (
-        <ul className="absolute w-1/2 border border-gray-300 bg-white max-h-72 overflow-y-auto rounded shadow-md mt-1">
+        <ul className="absolute w-32 border border-gray-300 bg-white max-h-80 overflow-y-auto rounded shadow-md mt-1">
           {businessZones.map((businessZone) => (
             <li
               key={businessZone.id}
@@ -48,4 +48,3 @@ export default function BusinessZoneSelector({
     </div>
   );
 }
-

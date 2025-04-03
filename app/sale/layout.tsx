@@ -8,7 +8,7 @@ export default function layout({
 }>) {
   return (
     <>
-      <header className="flex items-center justify-center border border-b-1">
+      <header className="flex items-center justify-center border-b-[1px]">
         <Guide />
       </header>
       {children}

@@ -69,13 +69,13 @@ export default function SaleCalculation() {
     setTotalBisness(Number(value));
   };
 
-  const handleCalculateBtn = (e: FormEvent<HTMLFormElement>) => {
+  const handleCalculateBtn = (e: FormEvent) => {
     e.preventDefault();
     if (totalBisness === 0) {
       alert("방문업소 수를 입력해주세요!");
       return;
     }
-    setUpdatedBskyReport(calculatePercentages(updatedBskyReport));
+    setUpdatedBskyReport(calculatePercentages({ ...updatedBskyReport }));
     setShowResult(true);
   };
 

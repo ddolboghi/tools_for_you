@@ -40,7 +40,7 @@ export const calculatePercentages = (bskyReport: BskyReport): BskyReport => {
   // 초기 백분율 계산
   Object.values(bskyReport).forEach((occupancyReslut) => {
     Object.values(occupancyReslut).forEach((result) => {
-      if (result.tables > 0) {
+      if (result.tables >= 0) {
         const percentage = (result.tables / totalTableNum) * 100;
         const roundedPercentage = Math.round(percentage * 10) / 10;
         result.percentage = roundedPercentage;

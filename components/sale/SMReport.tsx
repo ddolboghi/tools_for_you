@@ -12,7 +12,7 @@ export default function SMReport({
   galmegiSums,
 }: SMReportProps) {
   return (
-    <div className="border border-blue-300">
+    <div className="border border-gray-300">
       <h1>
         {"<"}이순조SM 퇴근보고{">"}
       </h1>

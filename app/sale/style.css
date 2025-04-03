@@ -1,0 +1,11 @@
+@tailwind utilities;
+
+@layer utilities {
+  .app-container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}

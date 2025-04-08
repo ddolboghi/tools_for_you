@@ -28,6 +28,7 @@ export default function Galmegi16Report({
 
   useEffect(() => {
     fetchShopList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [businessZone]);
 
   const handleGalmegi16ShopReportClipboard = () => {

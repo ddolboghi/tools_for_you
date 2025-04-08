@@ -7,6 +7,7 @@ import Order from "./Order";
 import {
   BskyReport,
   Orders,
+  OrderSums,
   OtherCompanyPromotionResult,
   PromotionStock,
 } from "@/utils/sale/types";
@@ -25,6 +26,8 @@ import BusinessZoneSelector from "./BusinessZoneSelector";
 import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
 import PromotionStockInput from "./promotionStock/PromotionStockInput";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
+import { insertReport } from "@/action/report";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function SaleCalculation() {
   const [updatedBskyReport, setUpdatedBskyReport] =
@@ -69,14 +72,52 @@ export default function SaleCalculation() {
     setTotalBisness(Number(value));
   };
 
+  const debouncedInsertReport = useDebounce(
+    async (
+      zone: string,
+      visitShopNumber: number,
+      report: BskyReport,
+      orderSums: OrderSums,
+      additionalOrderSums: OrderSums
+    ) => {
+      await insertReport(
+        zone,
+        visitShopNumber,
+        report,
+        orderSums,
+        additionalOrderSums
+      );
+    },
+    300
+  );
+
   const handleCalculateBtn = (e: FormEvent) => {
     e.preventDefault();
+
     if (totalBisness === 0) {
       alert("방문업소 수를 입력해주세요!");
       return;
     }
-    setUpdatedBskyReport(calculatePercentages({ ...updatedBskyReport }));
+
+    const updatedReport = calculatePercentages({ ...updatedBskyReport });
+    setUpdatedBskyReport(updatedReport);
     setShowResult(true);
+
+    afterReportUpdate(() => {
+      debouncedInsertReport(
+        selectedBusinessZone,
+        totalBisness,
+        updatedReport,
+        orderSums,
+        additionalOrderSums
+      );
+    });
+  };
+
+  const afterReportUpdate = (callback: () => void) => {
+    setTimeout(() => {
+      callback();
+    }, 100);
   };
 
   const addOrderLine = () => {

@@ -1,6 +1,10 @@
 import { BskyReport } from "@/utils/sale/types";
 
-// Result html 구조
+/**
+ * 데이터 프레임
+ * 이 데이터 프레임을 활용해서 테이블 수를 입력받고 보고 내용을 생성합니다.
+ * 새로운 주류는 '주류명: {tables: 0, percentage: 0}' 형태로 추가합니다.
+ */
 export const bskyReport: BskyReport = {
   "가. 무학": {
     좋은데이: { tables: 0, percentage: 0 },

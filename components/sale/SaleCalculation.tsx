@@ -270,16 +270,10 @@ export default function SaleCalculation() {
         )}
         <Button
           type="submit"
-          className={`my-2 bg-blue-500 text-white font-semibold rounded p-2 w-full ${
-            isLoading && "animate-pulse"
-          }`}
+          className="my-2 bg-[#3967b3] hover:bg-[#3871cc] text-white font-semibold rounded p-2 w-full"
           disabled={isLoading}
         >
-          {isLoading ? (
-            <LoaderCircle className="animate-spin" color="#000000" />
-          ) : (
-            "계산하기"
-          )}
+          {isLoading ? <LoaderCircle className="animate-spin" /> : "계산하기"}
         </Button>
         <p className="text-xs text-gray-600">
           ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.

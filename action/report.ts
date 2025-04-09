@@ -8,7 +8,8 @@ export const insertReport = async (
   visitShopNumber: number,
   calculationResult: BskyReport,
   orderSums: OrderSums,
-  additionalOrderSums: OrderSums
+  additionalOrderSums: OrderSums,
+  sellers: string
 ) => {
   try {
     const { error } = await supabaseClient
@@ -20,6 +21,7 @@ export const insertReport = async (
           calculation_result: calculationResult,
           order_sums: orderSums,
           additional_order_sums: additionalOrderSums,
+          sellers: sellers,
         },
       ])
       .select();

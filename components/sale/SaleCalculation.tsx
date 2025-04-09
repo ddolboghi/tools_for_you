@@ -1,13 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { calculatePercentages } from "@/lib/sale/sale";
 import Result from "./Result";
 import Order from "./Order";
 import {
   BskyReport,
   Orders,
-  OrderSums,
   OtherCompanyPromotionResult,
   PromotionStock,
 } from "@/utils/sale/types";
@@ -27,7 +26,7 @@ import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion
 import PromotionStockInput from "./promotionStock/PromotionStockInput";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
 import { insertReport } from "@/action/report";
-import { useDebounce } from "@/hooks/useDebounce";
+import { LoaderCircle } from "lucide-react";
 
 export default function SaleCalculation() {
   const [updatedBskyReport, setUpdatedBskyReport] =
@@ -50,6 +49,7 @@ export default function SaleCalculation() {
   >(initOtherCompanyPromotions);
   const [promotionStocks, setPromotionStocks] =
     useState<PromotionStock[]>(initPromotionStocks);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setOrderSums(getOrderSums(orders));
@@ -72,28 +72,7 @@ export default function SaleCalculation() {
     setTotalBisness(Number(value));
   };
 
-  const debouncedInsertReport = useDebounce(
-    async (
-      zone: string,
-      visitShopNumber: number,
-      report: BskyReport,
-      orderSums: OrderSums,
-      additionalOrderSums: OrderSums
-    ) => {
-      await insertReport(
-        zone,
-        visitShopNumber,
-        report,
-        orderSums,
-        additionalOrderSums
-      );
-    },
-    300
-  );
-
-  const handleCalculateBtn = (e: FormEvent) => {
-    e.preventDefault();
-
+  const handleCalculateBtn = async () => {
     if (totalBisness === 0) {
       alert("방문업소 수를 입력해주세요!");
       return;
@@ -102,22 +81,22 @@ export default function SaleCalculation() {
     const updatedReport = calculatePercentages({ ...updatedBskyReport });
     setUpdatedBskyReport(updatedReport);
     setShowResult(true);
-
-    afterReportUpdate(() => {
-      debouncedInsertReport(
-        selectedBusinessZone,
-        totalBisness,
-        updatedReport,
-        orderSums,
-        additionalOrderSums
-      );
-    });
-  };
-
-  const afterReportUpdate = (callback: () => void) => {
-    setTimeout(() => {
-      callback();
-    }, 100);
+    setIsLoading(true);
+    const sellers = Object.values(orders)
+      .map((order) => order["0"])
+      .join("");
+    const response = await insertReport(
+      selectedBusinessZone,
+      totalBisness,
+      updatedReport,
+      orderSums,
+      additionalOrderSums,
+      sellers
+    );
+    if (!response) {
+      console.error("Internal Server Error");
+    }
+    setIsLoading(false);
   };
 
   const addOrderLine = () => {
@@ -240,7 +219,12 @@ export default function SaleCalculation() {
           handleSelectBusinessZone={handleSelectBusinessZone}
         />
       </section>
-      <form onSubmit={(e) => handleCalculateBtn(e)}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCalculateBtn();
+        }}
+      >
         {Object.entries(bskyReport).map(([company, drinks], index) => (
           <section
             key={`company-${index}`}
@@ -286,9 +270,16 @@ export default function SaleCalculation() {
         )}
         <Button
           type="submit"
-          className="my-2 bg-blue-500 text-white font-semibold rounded p-2 w-full"
+          className={`my-2 bg-blue-500 text-white font-semibold rounded p-2 w-full ${
+            isLoading && "animate-pulse"
+          }`}
+          disabled={isLoading}
         >
-          계산하기
+          {isLoading ? (
+            <LoaderCircle className="animate-spin" color="#000000" />
+          ) : (
+            "계산하기"
+          )}
         </Button>
         <p className="text-xs text-gray-600">
           ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.

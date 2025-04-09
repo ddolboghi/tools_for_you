@@ -43,13 +43,20 @@ export default function ShopList({
     setIsInputFocused(false);
   };
 
-  const handleSaveEdit = async (index: number) => {
-    if (editValue.trim() !== "") {
-      const updatedShop = { ...shopList[index], name: editValue };
-      setIsUpdating(true);
-      const response = await updateShop(updatedShop.id, updatedShop.name);
-      if (response) {
-        await onFetch();
+  const handleSaveEdit = async (index: number, originShopName: string) => {
+    if (editValue !== originShopName) {
+      const isConfirmed = confirm(
+        `${editValue}(으)로 수정하시겠어요?\n타 상권 업소를 수정하지 말아 주세요.`
+      );
+      if (isConfirmed) {
+        if (editValue.trim() !== "") {
+          const updatedShop = { ...shopList[index], name: editValue };
+          setIsUpdating(true);
+          const response = await updateShop(updatedShop.id, updatedShop.name);
+          if (response) {
+            await onFetch();
+          }
+        }
       }
     }
     setIsUpdating(false);
@@ -115,7 +122,7 @@ export default function ShopList({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleSaveEdit(index)}
+                              onClick={() => handleSaveEdit(index, shop.name)}
                               disabled={isUpdating}
                               className="h-7 px-2 py-0 text-xs"
                             >

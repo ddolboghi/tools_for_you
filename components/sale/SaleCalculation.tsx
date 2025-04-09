@@ -84,7 +84,7 @@ export default function SaleCalculation() {
     setIsLoading(true);
     const sellers = Object.values(orders)
       .map((order) => order["0"])
-      .join("");
+      .join(",");
     await insertReport(
       selectedBusinessZone,
       totalBisness,

@@ -85,7 +85,7 @@ export default function SaleCalculation() {
     const sellers = Object.values(orders)
       .map((order) => order["0"])
       .join("");
-    const response = await insertReport(
+    await insertReport(
       selectedBusinessZone,
       totalBisness,
       updatedReport,
@@ -93,9 +93,6 @@ export default function SaleCalculation() {
       additionalOrderSums,
       sellers
     );
-    if (!response) {
-      console.error("Internal Server Error");
-    }
     setIsLoading(false);
   };
 
@@ -268,6 +265,9 @@ export default function SaleCalculation() {
             />
           </>
         )}
+        <p className="text-xs text-gray-600">
+          ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.
+        </p>
         <Button
           type="submit"
           className="my-2 bg-[#3967b3] hover:bg-[#3871cc] text-white font-semibold rounded p-2 w-full"
@@ -275,9 +275,6 @@ export default function SaleCalculation() {
         >
           {isLoading ? <LoaderCircle className="animate-spin" /> : "계산하기"}
         </Button>
-        <p className="text-xs text-gray-600">
-          ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.
-        </p>
       </form>
       {showResult && (
         <Result

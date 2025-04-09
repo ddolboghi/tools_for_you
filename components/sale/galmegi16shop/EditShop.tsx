@@ -1,16 +1,17 @@
 "use client";
 
 import { deleteShop } from "@/action/galmegi16Shop";
+import { Button } from "@/components/ui/button";
 import { Galmegi16Shop } from "@/utils/sale/galmegi16ShopTypes";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
 type EditShopProps = {
-  index: number;
   shop: Galmegi16Shop;
   onDelete: () => Promise<void>;
 };
 
-export default function EditShop({ index, shop, onDelete }: EditShopProps) {
+export default function EditShop({ shop, onDelete }: EditShopProps) {
   const [isError, setIsError] = useState(false);
 
   const handleDeleteShop = async () => {
@@ -29,17 +30,16 @@ export default function EditShop({ index, shop, onDelete }: EditShopProps) {
   };
 
   return (
-    <div className="flex flex-row items-center gap-1">
-      <p>
-        {index + 1}. {shop.name}
-      </p>
-      <button
+    <div>
+      <Button
+        variant="outline"
+        size="icon"
         type="button"
         onClick={handleDeleteShop}
-        className="bg-red-500 text-white rounded p-1 ml-2 text-[10px]"
+        className="bg-red-500 text-white hover:bg-red-400 hover:text-white"
       >
-        삭제
-      </button>
+        <Trash2 />
+      </Button>
       {isError && <p className="text-red-500">삭제에 실패했습니다.</p>}
     </div>
   );

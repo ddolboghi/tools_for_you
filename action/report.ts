@@ -1,17 +1,22 @@
 "use server";
 
-import { supabaseClient } from "@/lib/getSupabaseClient";
-import { BskyReport, OrderSums } from "@/utils/sale/types";
+import { supabaseClient } from "@/utils/getSupabaseClient";
+import { transformOrdersToArray } from "@/utils/sale/order";
+import { BskyReport, Orders } from "@/utils/sale/types";
 
 export const insertReport = async (
   businessZone: string,
   visitShopNumber: number,
   calculationResult: BskyReport,
-  orderSums: OrderSums,
-  additionalOrderSums: OrderSums,
-  sellers: string
+  sellers: string,
+  orders: Orders,
+  additionalOrders: Orders
 ) => {
   try {
+    const transformedOrders = transformOrdersToArray(orders);
+    const transformedAdditionalOrders =
+      transformOrdersToArray(additionalOrders);
+
     const { error } = await supabaseClient
       .from("report")
       .insert([
@@ -19,9 +24,9 @@ export const insertReport = async (
           business_zone: businessZone,
           visit_shop_number: visitShopNumber,
           calculation_result: calculationResult,
-          order_sums: orderSums,
-          additional_order_sums: additionalOrderSums,
           sellers: sellers,
+          orders: transformedOrders,
+          additional_orders: transformedAdditionalOrders,
         },
       ])
       .select();

@@ -1,6 +1,10 @@
 "use client";
 
-import { getBSKYReport, getGalmegiSums, getSMReport } from "@/lib/sale/report";
+import {
+  getBSKYReport,
+  getGalmegiSums,
+  getSMReport,
+} from "@/utils/sale/report";
 import {
   BskyReport,
   Orders,
@@ -10,12 +14,12 @@ import {
 } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
-import { getReportTitle } from "@/lib/sale/commonReports";
+import { getReportTitle } from "@/utils/sale/commonReports";
 import {
   getTotalOccupancyNumByCompany,
   getTotalTableNum,
-} from "@/lib/sale/sale";
-import { getGalmegiSumByWorker } from "@/lib/sale/order";
+} from "@/utils/sale/calculation";
+import { getGalmegiSumByWorker } from "@/utils/sale/order";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 import OtherCompanyPromotionReport from "./report/OtherCompanyPromotionReport";
 import PromotionStockReport from "./report/PromotionStockReport";

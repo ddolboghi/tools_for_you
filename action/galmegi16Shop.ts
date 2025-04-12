@@ -1,6 +1,6 @@
 "use server";
 
-import { supabaseClient } from "@/lib/getSupabaseClient";
+import { supabaseClient } from "@/utils/getSupabaseClient";
 import { Galmegi16Shop } from "@/utils/sale/galmegi16ShopTypes";
 import { revalidateTag } from "next/cache";
 

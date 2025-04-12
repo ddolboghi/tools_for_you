@@ -4,7 +4,7 @@ import {
   OtherCompanyPromotionResult,
   PromotionStock,
 } from "@/utils/sale/types";
-import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./sale";
+import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./calculation";
 import { getGalmegiSumByWorker, getOrderSums } from "./order";
 import { getReportTitle } from "./commonReports";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";

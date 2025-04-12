@@ -5,7 +5,9 @@ import ShopList from "./ShopList";
 import { Galmegi16Shop } from "@/utils/sale/galmegi16ShopTypes";
 import { getShops } from "@/action/galmegi16Shop";
 import AddShop from "./AddShop";
-import { getGalmegi16ShopReport } from "@/lib/sale/galmegi16ShopReport";
+import { getGalmegi16ShopReport } from "@/utils/sale/galmegi16ShopReport";
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
 
 type Galmegi16ReportProps = {
   businessZone: string;
@@ -46,7 +48,7 @@ export default function Galmegi16Report({
     }
   };
   return (
-    <div>
+    <section>
       <ShopList
         businessZone={businessZone}
         shopList={shopList}
@@ -54,13 +56,18 @@ export default function Galmegi16Report({
         isLoading={isLoading}
       />
       <AddShop businessZone={businessZone} onAdd={() => fetchShopList()} />
-      <button
+      <Button
         type="button"
-        className="my-2 bg-cyan-300 text-gray-600 font-semibold rounded p-2 w-full"
+        className="my-2 bg-cyan-500 hover:bg-[#2098ad] text-white font-semibold rounded p-2 w-full"
         onClick={handleGalmegi16ShopReportClipboard}
+        disabled={isLoading}
       >
-        갈매기 보고 복사하기
-      </button>
-    </div>
+        {isLoading ? (
+          <LoaderCircle className="animate-spin" />
+        ) : (
+          "갈매기 보고 복사하기"
+        )}
+      </Button>
+    </section>
   );
 }

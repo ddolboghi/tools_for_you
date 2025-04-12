@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { calculatePercentages } from "@/lib/sale/sale";
+import { useEffect, useRef, useState } from "react";
+import { calculatePercentages } from "@/utils/sale/calculation";
 import Result from "./Result";
 import Order from "./Order";
 import {
@@ -16,7 +16,7 @@ import {
   businessZones,
 } from "@/utils/sale/businessZones";
 import { initOrder2 } from "@/data/sale/order";
-import { getOrderSums } from "@/lib/sale/order";
+import { getOrderSums } from "@/utils/sale/order";
 import { initPromotionStocks } from "@/utils/sale/promotionStock";
 import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,11 @@ import PromotionStockInput from "./promotionStock/PromotionStockInput";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
 import { insertReport } from "@/action/report";
 import { LoaderCircle } from "lucide-react";
+
+type ShowBusinewwWarning = {
+  show: boolean;
+  message: string;
+};
 
 export default function SaleCalculation() {
   const [updatedBskyReport, setUpdatedBskyReport] =
@@ -50,6 +55,9 @@ export default function SaleCalculation() {
   const [promotionStocks, setPromotionStocks] =
     useState<PromotionStock[]>(initPromotionStocks);
   const [isLoading, setIsLoading] = useState(false);
+  const [showBusinessWarning, setShowBusinessWarning] =
+    useState<ShowBusinewwWarning>({ show: false, message: "" });
+  const businessInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setOrderSums(getOrderSums(orders));
@@ -69,14 +77,35 @@ export default function SaleCalculation() {
     }));
   };
   const handleTotalBisness = (value: string) => {
-    setTotalBisness(Number(value));
+    const inputTotalBisness = Number(value);
+    if (Number.isNaN(inputTotalBisness)) {
+      setShowBusinessWarning((prev) => ({
+        ...prev,
+        show: true,
+        message: "숫자를 입력해주세요.",
+      }));
+      return;
+    }
+    setTotalBisness(inputTotalBisness);
+    setShowBusinessWarning((prev) => ({ ...prev, show: false, message: "" }));
   };
 
   const handleCalculateBtn = async () => {
-    if (totalBisness === 0) {
-      alert("방문업소 수를 입력해주세요!");
+    if (totalBisness <= 0) {
+      setShowBusinessWarning((prev) => ({
+        ...prev,
+        show: true,
+        message: "방문업소 수를 입력해주세요.",
+      }));
+      businessInputRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      businessInputRef.current?.focus();
       return;
     }
+
+    setShowBusinessWarning((prev) => ({ ...prev, show: false, message: "" }));
 
     const updatedReport = calculatePercentages({ ...updatedBskyReport });
     setUpdatedBskyReport(updatedReport);
@@ -89,9 +118,9 @@ export default function SaleCalculation() {
       selectedBusinessZone,
       totalBisness,
       updatedReport,
-      orderSums,
-      additionalOrderSums,
-      sellers
+      sellers,
+      orders,
+      additionalOrders
     );
     setIsLoading(false);
   };
@@ -198,17 +227,26 @@ export default function SaleCalculation() {
 
   return (
     <div className="p-4 max-w-[500px]">
-      <section className="flex flex-row mb-4 items-center">
-        <h1 className="text-lg pr-2">총 방문업소: </h1>
-        <input
-          type="number"
-          pattern="\d*"
-          className="border border-gray-300 rounded p-1 text-black"
-          placeholder="0"
-          onChange={(e) => handleTotalBisness(e.target.value)}
-        />
-        <span>개</span>
+      <section className="flex flex-col mb-4">
+        <label className="text-lg mb-1 flex items-center">
+          총 방문업소:
+          <input
+            ref={businessInputRef}
+            type="number"
+            pattern="\d*"
+            className="ml-2 border border-gray-300 rounded p-1 text-black"
+            placeholder="0"
+            onChange={(e) => handleTotalBisness(e.target.value)}
+          />
+          <span className="ml-1">개</span>
+        </label>
+        {showBusinessWarning.show && (
+          <p className="text-sm text-red-600 mt-1">
+            {showBusinessWarning.message}
+          </p>
+        )}
       </section>
+
       <section className="flex flex-row mb-4 items-center">
         <h1 className="text-lg pr-2">상권 선택: </h1>
         <BusinessZoneSelector

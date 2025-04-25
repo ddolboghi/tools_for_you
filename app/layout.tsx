@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import GoogleAdsense from "../components/GoogleAdSense";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -10,8 +11,8 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "tools for you",
-  description: "좀 편하게 살자",
+  title: "ABT TOOL",
+  description: "판촉 ABT 근무자의 칼퇴근을 위해!",
 };
 
 export const viewport: Viewport = {
@@ -28,6 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAdsense />
+      </head>
       <body className={`${pretendard.variable} antialiased`}>{children}</body>
     </html>
   );

@@ -1,7 +1,5 @@
 "use client";
 
-export const runtime = "edge";
-
 import { useEffect, useRef, useState } from "react";
 import { calculatePercentages } from "@/utils/sale/calculation";
 import Result from "./Result";

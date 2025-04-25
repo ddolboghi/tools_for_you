@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import SaleCalculation from "@/components/sale/SaleCalculation";
 import "./style.css";
 

@@ -9,6 +9,21 @@ import { getGalmegiSumByWorker, getOrderSums } from "./order";
 import { getReportTitle } from "./commonReports";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 
+const formatOccupancySection = (bskyReport: BskyReport) =>
+  Object.entries(bskyReport)
+    .map(([company, drinks]) => {
+      const header = `${company}: ${getTotalOccupancyNumByCompany(
+        drinks,
+        false
+      )}t (${getTotalOccupancyNumByCompany(drinks, true)}%)`;
+      const lines = Object.entries(drinks).map(
+        ([drink, result]) =>
+          `  - ${drink}: ${result.tables}t (${result.percentage}%)`
+      );
+      return [header, ...lines].join("\n");
+    })
+    .join("\n\n");
+
 export const getBSKYReport = (
   bskyReport: BskyReport,
   totalBisness: number,
@@ -55,52 +70,7 @@ export const getBSKYReport = (
 1. 점유비
 \u0020\u0020- 총 방문업소: ${totalBisness}개
 \u0020\u0020- 총 테이블 수: ${getTotalTableNum(bskyReport)}t\n
-가. 무학: ${getTotalOccupancyNumByCompany(
-    bskyReport["가. 무학"],
-    false
-  )}t (${getTotalOccupancyNumByCompany(bskyReport["가. 무학"], true)}%)
-\u0020\u0020- 좋은데이: ${bskyReport["가. 무학"]["좋은데이"].tables}t (${
-    bskyReport["가. 무학"]["좋은데이"].percentage
-  }%)
-\u0020\u0020- 톡시리즈: ${bskyReport["가. 무학"]["톡시리즈"].tables}t (${
-    bskyReport["가. 무학"]["톡시리즈"].percentage
-  }%)
-\u0020\u0020- 부산갈매기: ${bskyReport["가. 무학"]["부산갈매기"].tables}t (${
-    bskyReport["가. 무학"]["부산갈매기"].percentage
-  }%)\n
-나. 하이트진로: ${getTotalOccupancyNumByCompany(
-    bskyReport["나. 하이트진로"],
-    false
-  )}t (${getTotalOccupancyNumByCompany(bskyReport["나. 하이트진로"], true)}%)
-\u0020\u0020- 참이슬: ${bskyReport["나. 하이트진로"]["참이슬"].tables}t (${
-    bskyReport["나. 하이트진로"]["참이슬"].percentage
-  }%)
-\u0020\u0020- 진로: ${bskyReport["나. 하이트진로"]["진로"].tables}t (${
-    bskyReport["나. 하이트진로"]["진로"].percentage
-  }%)
-\u0020\u0020- 기타: ${bskyReport["나. 하이트진로"]["기타"].tables}t (${
-    bskyReport["나. 하이트진로"]["기타"].percentage
-  }%)\n
-다. 대선주조: ${getTotalOccupancyNumByCompany(
-    bskyReport["다. 대선주조"],
-    false
-  )}t (${getTotalOccupancyNumByCompany(bskyReport["다. 대선주조"], true)}%)
-\u0020\u0020- 대선(C1포함): ${
-    bskyReport["다. 대선주조"]["대선(C1포함)"].tables
-  }t (${bskyReport["다. 대선주조"]["대선(C1포함)"].percentage}%)
-\u0020\u0020- 기타: ${bskyReport["다. 대선주조"]["기타"].tables}t (${
-    bskyReport["다. 대선주조"]["기타"].percentage
-  }%)\n
-라. 롯데: ${getTotalOccupancyNumByCompany(
-    bskyReport["라. 롯데"],
-    false
-  )}t (${getTotalOccupancyNumByCompany(bskyReport["라. 롯데"], true)}%)
-\u0020\u0020- 새로: ${bskyReport["라. 롯데"]["새로"].tables}t (${
-    bskyReport["라. 롯데"]["새로"].percentage
-  }%)
-\u0020\u0020- 청하(별빛청하 포함): ${
-    bskyReport["라. 롯데"]["청하(별빛청하 포함)"].tables
-  }t (${bskyReport["라. 롯데"]["청하(별빛청하 포함)"].percentage}%)\n
+${formatOccupancySection(bskyReport)}\n
 마. 기타: 0t (0%)\n
 2. 전환 및 추가주문\n
 가. 근무인원\n

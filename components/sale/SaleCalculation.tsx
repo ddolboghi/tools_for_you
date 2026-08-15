@@ -226,7 +226,10 @@ export default function SaleCalculation() {
   };
 
   return (
-    <div className="p-4 max-w-[500px]">
+    // w-full은 max-w와 중복이 아니다. 부모 .app-container가 align-items:center라
+    // 이게 없으면 이 div가 fit-content로 크기를 정하고, 주문 입력 행의 고유 폭 요구
+    // 때문에 좁은 화면에서도 500px로 고정돼 좌우가 잘린다.
+    <div className="p-4 max-w-[500px] w-full">
       <section className="flex flex-col mb-4">
         <label className="text-lg mb-1 flex items-center">
           총 방문업소:

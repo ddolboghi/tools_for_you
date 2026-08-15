@@ -8,6 +8,7 @@ import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./calculation";
 import { getGalmegiSumByWorker, getOrderSums } from "./order";
 import { getReportTitle } from "./commonReports";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
+import { getSMReportRows } from "./smReport";
 
 const formatOccupancySection = (bskyReport: BskyReport) =>
   Object.entries(bskyReport)
@@ -103,35 +104,16 @@ export const getSMReport = (
 
   const totalTableNum = getTotalTableNum(bskyReport);
 
+  const rows = getSMReportRows(bskyReport)
+    .map((row) => `${row.label}${row.tables}T - ${row.percentage}%`)
+    .join("\n");
+
   return `<이순조SM 퇴근보고>
 1. 야간판촉지역
 광안 바닷가
 총 테이블 수 : ${totalTableNum}
 2. 야간 음용비
-좋은데이 : ${bskyReport["가. 무학"]["좋은데이"].tables}T - ${
-    bskyReport["가. 무학"]["좋은데이"].percentage
-  }%
-좋은데이 톡시리즈 : ${bskyReport["가. 무학"]["톡시리즈"].tables}T - ${
-    bskyReport["가. 무학"]["톡시리즈"].percentage
-  }%
-갈매기 : ${bskyReport["가. 무학"]["부산갈매기"].tables}T - ${
-    bskyReport["가. 무학"]["부산갈매기"].percentage
-  }%
-대선(C1포함) : ${bskyReport["다. 대선주조"]["대선(C1포함)"].tables}T - ${
-    bskyReport["다. 대선주조"]["대선(C1포함)"].percentage
-  }% 
-진로 : ${bskyReport["나. 하이트진로"]["진로"].tables}T - ${
-    bskyReport["나. 하이트진로"]["진로"].percentage
-  }%
-참이슬 : ${bskyReport["나. 하이트진로"]["참이슬"].tables}T - ${
-    bskyReport["나. 하이트진로"]["참이슬"].percentage
-  }%
-새로: ${bskyReport["라. 롯데"]["새로"].tables}T - ${
-    bskyReport["라. 롯데"]["새로"].percentage
-  }%
-청하(별빛청하 포함): ${
-    bskyReport["라. 롯데"]["청하(별빛청하 포함)"].tables
-  }T - ${bskyReport["라. 롯데"]["청하(별빛청하 포함)"].percentage}%
+${rows}
 
 갈매기 드시던 테이블 ${
     bskyReport["가. 무학"]["부산갈매기"].tables

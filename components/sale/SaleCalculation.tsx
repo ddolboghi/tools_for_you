@@ -198,7 +198,7 @@ export default function SaleCalculation() {
     value: string
   ) => {
     const numValue = Number(value);
-    const isValid = value !== "" && Number.isInteger(numValue) && numValue >= 0;
+    const isValid = value !== "" && Number.isSafeInteger(numValue) && numValue >= 0;
     setOtherCompanyActivities((prev) =>
       prev.map((activity) =>
         activity.name === name

@@ -197,11 +197,12 @@ export default function SaleCalculation() {
     team: "daepanTeam" | "haengsaTeam",
     value: string
   ) => {
-    const parsed = parseInt(value);
+    const numValue = Number(value);
+    const isValid = value !== "" && Number.isInteger(numValue) && numValue >= 0;
     setOtherCompanyActivities((prev) =>
       prev.map((activity) =>
         activity.name === name
-          ? { ...activity, [team]: Number.isNaN(parsed) ? undefined : parsed }
+          ? { ...activity, [team]: isValid ? numValue : undefined }
           : activity
       )
     );
@@ -284,6 +285,7 @@ export default function SaleCalculation() {
           <h1 className="text-lg font-bold">특이사항</h1>
           <input
             type="text"
+            aria-label="특이사항"
             className="border border-gray-300 rounded p-1 mt-2 w-full min-w-0 text-black"
             placeholder="없으면 비워두세요"
             value={remarks}

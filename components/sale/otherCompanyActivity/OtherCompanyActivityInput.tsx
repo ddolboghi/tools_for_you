@@ -21,7 +21,9 @@ export default function OtherCompanyActivityInput({
       <span className="whitespace-nowrap">대판팀</span>
       <input
         type="number"
-        pattern="\d*"
+        min="0"
+        step="1"
+        aria-label={`${activity.name} 대판팀 인원`}
         className="border border-gray-300 rounded p-1 w-[48px] min-w-0 text-black"
         value={activity.daepanTeam !== undefined ? activity.daepanTeam : ""}
         placeholder="0"
@@ -33,7 +35,9 @@ export default function OtherCompanyActivityInput({
       <span className="whitespace-nowrap">행사팀</span>
       <input
         type="number"
-        pattern="\d*"
+        min="0"
+        step="1"
+        aria-label={`${activity.name} 행사팀 인원`}
         className="border border-gray-300 rounded p-1 w-[48px] min-w-0 text-black"
         value={activity.haengsaTeam !== undefined ? activity.haengsaTeam : ""}
         placeholder="0"

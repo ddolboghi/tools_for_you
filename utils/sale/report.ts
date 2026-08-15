@@ -1,9 +1,4 @@
-import {
-  BskyReport,
-  Orders,
-  OtherCompanyActivity,
-  PromotionStock,
-} from "@/utils/sale/types";
+import { BskyReport, Orders, OtherCompanyActivity } from "@/utils/sale/types";
 import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./calculation";
 import {
   formatOrderQuantities,
@@ -11,7 +6,6 @@ import {
   getOrderSums,
 } from "./order";
 import { getReportTitle } from "./commonReports";
-import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 import { getSMReportRows } from "./smReport";
 
 const formatOccupancySection = (bskyReport: BskyReport) =>
@@ -36,7 +30,7 @@ export const getBSKYReport = (
   orders: Orders,
   additionalOrders: Orders,
   otherCompanyActivities: OtherCompanyActivity[],
-  promotionStocks: PromotionStock[]
+  remarks: string
 ) => {
   let workerReportOfOrders = "";
   for (const order of Object.values(orders)) {
@@ -71,10 +65,6 @@ export const getBSKYReport = (
     )
     .join("\n");
 
-  const formattedPromotionStocks = promotionStocks
-    .map((stock) => ` - ${stock.name} ${stock.quantity || 0}박스`)
-    .join("\n");
-
   let reportContent = `${getReportTitle(selectedBusinessZone)}
 1. 점유비
 \u0020\u0020- 총 방문업소: ${totalBisness}개
@@ -91,12 +81,10 @@ ${workerReportOfOrders}
 ${workerReportOfAdditionalOrders}
 `;
   reportContent += `3. 타사 활동
-${formattedActivities}`;
-  if (additionalInfoBusinessZones.includes(selectedBusinessZone)) {
-    reportContent += `\n
-4. ★자사 판촉물 재고량★ (박스로 기입해서 올려주세요)
-${formattedPromotionStocks}`;
-  }
+${formattedActivities}
+
+4. 특이사항
+- ${remarks.trim() || "없음"}`;
   return reportContent;
 };
 

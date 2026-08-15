@@ -20,11 +20,6 @@ export type OtherCompanyActivity = {
   haengsaTeam: number | undefined;
 };
 
-export type PromotionStock = {
-  name: string;
-  quantity: number | undefined;
-};
-
 type ReportResult = {
   tables: number;
   percentage: number;

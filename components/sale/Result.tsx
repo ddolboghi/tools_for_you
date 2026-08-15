@@ -10,7 +10,6 @@ import {
   Orders,
   OrderSums,
   OtherCompanyActivity,
-  PromotionStock,
 } from "@/utils/sale/types";
 import { useMemo } from "react";
 import OrderResult from "./OrderResult";
@@ -20,9 +19,7 @@ import {
   getTotalTableNum,
 } from "@/utils/sale/calculation";
 import { getGalmegiSumByWorker } from "@/utils/sale/order";
-import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 import OtherCompanyActivityReport from "./report/OtherCompanyActivityReport";
-import PromotionStockReport from "./report/PromotionStockReport";
 import SMReport from "./SMReport";
 import { Button } from "../ui/button";
 import {
@@ -41,7 +38,7 @@ type ResultProps = {
   orderSums: OrderSums;
   additionalOrderSums: OrderSums;
   otherCompanyActivities: OtherCompanyActivity[];
-  promotionStocks: PromotionStock[];
+  remarks: string;
 };
 
 export default function Result({
@@ -53,7 +50,7 @@ export default function Result({
   orderSums,
   additionalOrderSums,
   otherCompanyActivities,
-  promotionStocks,
+  remarks,
 }: ResultProps) {
   const BSKYReport = useMemo(
     () =>
@@ -64,7 +61,7 @@ export default function Result({
         orders,
         additionalOrders,
         otherCompanyActivities,
-        promotionStocks
+        remarks
       ),
     [
       bskyReport,
@@ -73,7 +70,7 @@ export default function Result({
       orders,
       additionalOrders,
       otherCompanyActivities,
-      promotionStocks,
+      remarks,
     ]
   );
 
@@ -191,14 +188,11 @@ export default function Result({
                   <OtherCompanyActivityReport
                     otherCompanyActivities={otherCompanyActivities}
                   />
-                  {additionalInfoBusinessZones.includes(
-                    selectedBusinessZone
-                  ) && (
-                    <>
-                      <br />
-                      <PromotionStockReport promotionStocks={promotionStocks} />
-                    </>
-                  )}
+                  <br />
+                  <section>
+                    <h1>4. 특이사항</h1>
+                    <p>- {remarks.trim() || "없음"}</p>
+                  </section>
                 </div>
               </div>
               {selectedBusinessZone === "광안" && (

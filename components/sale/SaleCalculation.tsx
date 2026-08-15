@@ -4,26 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { calculatePercentages } from "@/utils/sale/calculation";
 import Result from "./Result";
 import Order from "./Order";
-import {
-  BskyReport,
-  Orders,
-  OtherCompanyActivity,
-  PromotionStock,
-} from "@/utils/sale/types";
+import { BskyReport, Orders, OtherCompanyActivity } from "@/utils/sale/types";
 
-import {
-  additionalInfoBusinessZones,
-  businessZones,
-} from "@/utils/sale/businessZones";
+import { businessZones } from "@/utils/sale/businessZones";
 import { initOrder2 } from "@/data/sale/order";
 import { getOrderSums } from "@/utils/sale/order";
-import { initPromotionStocks } from "@/utils/sale/promotionStock";
 import { initOtherCompanyActivities } from "@/utils/sale/otherCompanyActivity";
 import { Button } from "@/components/ui/button";
 import { bskyReport } from "@/data/sale/report";
 import BusinessZoneSelector from "./BusinessZoneSelector";
 import OtherCompanyActivitySection from "./otherCompanyActivity/OtherCompanyActivity";
-import PromotionStockInput from "./promotionStock/PromotionStockInput";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
 import { insertReport } from "@/action/report";
 import { LoaderCircle } from "lucide-react";
@@ -52,8 +42,7 @@ export default function SaleCalculation() {
   const [otherCompanyActivities, setOtherCompanyActivities] = useState<
     OtherCompanyActivity[]
   >(initOtherCompanyActivities);
-  const [promotionStocks, setPromotionStocks] =
-    useState<PromotionStock[]>(initPromotionStocks);
+  const [remarks, setRemarks] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [showBusinessWarning, setShowBusinessWarning] =
     useState<ShowBusinewwWarning>({ show: false, message: "" });
@@ -218,10 +207,6 @@ export default function SaleCalculation() {
     );
   };
 
-  const handlePromotionStockChange = (stocks: PromotionStock[]) => {
-    setPromotionStocks(stocks);
-  };
-
   return (
     // w-full은 max-w와 중복이 아니다. 부모 .app-container가 align-items:center라
     // 이게 없으면 이 div가 fit-content로 크기를 정하고, 주문 입력 행의 고유 폭 요구
@@ -295,12 +280,16 @@ export default function SaleCalculation() {
           otherCompanyActivities={otherCompanyActivities}
           handleOtherCompanyActivity={handleOtherCompanyActivity}
         />
-        {additionalInfoBusinessZones.includes(selectedBusinessZone) && (
-          <PromotionStockInput
-            promotionStocks={promotionStocks}
-            handlePromotionStockChange={handlePromotionStockChange}
+        <section className="border border-gray-300 rounded p-4 w-full text-black mt-4">
+          <h1 className="text-lg font-bold">특이사항</h1>
+          <input
+            type="text"
+            className="border border-gray-300 rounded p-1 mt-2 w-full min-w-0 text-black"
+            placeholder="없으면 비워두세요"
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
           />
-        )}
+        </section>
         <p className="text-xs text-gray-600">
           ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.
         </p>
@@ -322,7 +311,7 @@ export default function SaleCalculation() {
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
           otherCompanyActivities={otherCompanyActivities}
-          promotionStocks={promotionStocks}
+          remarks={remarks}
         />
       )}
       <Galmegi16Report businessZone={selectedBusinessZone} />

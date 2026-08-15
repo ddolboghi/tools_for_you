@@ -48,9 +48,10 @@ const additionalOrders: Orders = {
 const label = process.argv[2] ?? "snapshot";
 const report = buildReport();
 
-console.log(`===== ${label} / 상권 보고 =====`);
+console.log(`# ${label}`);
+console.log("===== 상권 보고 =====");
 console.log(
   getBSKYReport(report, 40, "수영", orders, additionalOrders, [], [])
 );
-console.log(`===== ${label} / 담당자 보고 =====`);
+console.log("===== 담당자 보고 =====");
 console.log(getSMReport(report, orders, additionalOrders));

@@ -8,6 +8,7 @@ import { BskyReport } from "@/utils/sale/types";
 export const bskyReport: BskyReport = {
   "가. 무학": {
     좋은데이: { tables: 0, percentage: 0 },
+    모히또: { tables: 0, percentage: 0 },
     톡시리즈: { tables: 0, percentage: 0 },
     부산갈매기: { tables: 0, percentage: 0 },
   },

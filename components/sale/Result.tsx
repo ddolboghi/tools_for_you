@@ -9,7 +9,7 @@ import {
   BskyReport,
   Orders,
   OrderSums,
-  OtherCompanyPromotionResult,
+  OtherCompanyActivity,
   PromotionStock,
 } from "@/utils/sale/types";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ import {
 } from "@/utils/sale/calculation";
 import { getGalmegiSumByWorker } from "@/utils/sale/order";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
-import OtherCompanyPromotionReport from "./report/OtherCompanyPromotionReport";
+import OtherCompanyActivityReport from "./report/OtherCompanyActivityReport";
 import PromotionStockReport from "./report/PromotionStockReport";
 import SMReport from "./SMReport";
 import { Button } from "../ui/button";
@@ -40,7 +40,7 @@ type ResultProps = {
   additionalOrders: Orders;
   orderSums: OrderSums;
   additionalOrderSums: OrderSums;
-  otherCompanyPromotions: OtherCompanyPromotionResult[];
+  otherCompanyActivities: OtherCompanyActivity[];
   promotionStocks: PromotionStock[];
 };
 
@@ -52,7 +52,7 @@ export default function Result({
   additionalOrders,
   orderSums,
   additionalOrderSums,
-  otherCompanyPromotions,
+  otherCompanyActivities,
   promotionStocks,
 }: ResultProps) {
   const BSKYReport = useMemo(
@@ -63,7 +63,7 @@ export default function Result({
         selectedBusinessZone,
         orders,
         additionalOrders,
-        otherCompanyPromotions,
+        otherCompanyActivities,
         promotionStocks
       ),
     [
@@ -72,7 +72,7 @@ export default function Result({
       selectedBusinessZone,
       orders,
       additionalOrders,
-      otherCompanyPromotions,
+      otherCompanyActivities,
       promotionStocks,
     ]
   );
@@ -186,16 +186,20 @@ export default function Result({
                   orderSums={orderSums}
                   additionalOrderSums={additionalOrderSums}
                 />
-                {additionalInfoBusinessZones.includes(selectedBusinessZone) && (
-                  <div>
-                    <br />
-                    <OtherCompanyPromotionReport
-                      otherCompanyPromotions={otherCompanyPromotions}
-                    />
-                    <br />
-                    <PromotionStockReport promotionStocks={promotionStocks} />
-                  </div>
-                )}
+                <div>
+                  <br />
+                  <OtherCompanyActivityReport
+                    otherCompanyActivities={otherCompanyActivities}
+                  />
+                  {additionalInfoBusinessZones.includes(
+                    selectedBusinessZone
+                  ) && (
+                    <>
+                      <br />
+                      <PromotionStockReport promotionStocks={promotionStocks} />
+                    </>
+                  )}
+                </div>
               </div>
               {selectedBusinessZone === "광안" && (
                 <SMReport

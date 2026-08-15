@@ -14,10 +14,10 @@ export type GalmegiSums = {
   total: number;
 };
 
-export type OtherCompanyPromotionResult = {
+export type OtherCompanyActivity = {
   name: string;
-  workerNumber: number | undefined;
-  info: string;
+  daepanTeam: number | undefined;
+  haengsaTeam: number | undefined;
 };
 
 export type PromotionStock = {

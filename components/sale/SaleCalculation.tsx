@@ -7,7 +7,7 @@ import Order from "./Order";
 import {
   BskyReport,
   Orders,
-  OtherCompanyPromotionResult,
+  OtherCompanyActivity,
   PromotionStock,
 } from "@/utils/sale/types";
 
@@ -18,11 +18,11 @@ import {
 import { initOrder2 } from "@/data/sale/order";
 import { getOrderSums } from "@/utils/sale/order";
 import { initPromotionStocks } from "@/utils/sale/promotionStock";
-import { initOtherCompanyPromotions } from "@/utils/sale/otherCompanyPromotion";
+import { initOtherCompanyActivities } from "@/utils/sale/otherCompanyActivity";
 import { Button } from "@/components/ui/button";
 import { bskyReport } from "@/data/sale/report";
 import BusinessZoneSelector from "./BusinessZoneSelector";
-import OtherCompanyPromotion from "./otherCompanyPromotion/OtherCompanyPromotion";
+import OtherCompanyActivitySection from "./otherCompanyActivity/OtherCompanyActivity";
 import PromotionStockInput from "./promotionStock/PromotionStockInput";
 import Galmegi16Report from "./galmegi16shop/Galmegi16Report";
 import { insertReport } from "@/action/report";
@@ -49,9 +49,9 @@ export default function SaleCalculation() {
   const [additionalOrderSums, setAdditionalOrderSums] = useState(
     getOrderSums(additionalOrders)
   );
-  const [otherCompanyPromotions, setOtherCompanyPromotions] = useState<
-    OtherCompanyPromotionResult[]
-  >(initOtherCompanyPromotions);
+  const [otherCompanyActivities, setOtherCompanyActivities] = useState<
+    OtherCompanyActivity[]
+  >(initOtherCompanyActivities);
   const [promotionStocks, setPromotionStocks] =
     useState<PromotionStock[]>(initPromotionStocks);
   const [isLoading, setIsLoading] = useState(false);
@@ -203,22 +203,19 @@ export default function SaleCalculation() {
     setSelectedBusinessZone(selectedBusinessZone);
   };
 
-  const handleOtherCompanyPromotion = (
-    promotionResult: OtherCompanyPromotionResult
+  const handleOtherCompanyActivity = (
+    name: string,
+    team: "daepanTeam" | "haengsaTeam",
+    value: string
   ) => {
-    setOtherCompanyPromotions((prev) => {
-      const existingPromotionIndex = prev.findIndex(
-        (promotion) => promotion.name === promotionResult.name
-      );
-
-      if (existingPromotionIndex !== -1) {
-        const updatedPromotions = [...prev];
-        updatedPromotions[existingPromotionIndex] = promotionResult;
-        return updatedPromotions;
-      } else {
-        return [...prev, promotionResult];
-      }
-    });
+    const parsed = parseInt(value);
+    setOtherCompanyActivities((prev) =>
+      prev.map((activity) =>
+        activity.name === name
+          ? { ...activity, [team]: Number.isNaN(parsed) ? undefined : parsed }
+          : activity
+      )
+    );
   };
 
   const handlePromotionStockChange = (stocks: PromotionStock[]) => {
@@ -294,17 +291,15 @@ export default function SaleCalculation() {
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
         />
+        <OtherCompanyActivitySection
+          otherCompanyActivities={otherCompanyActivities}
+          handleOtherCompanyActivity={handleOtherCompanyActivity}
+        />
         {additionalInfoBusinessZones.includes(selectedBusinessZone) && (
-          <>
-            <OtherCompanyPromotion
-              otherCompanyPromotions={otherCompanyPromotions}
-              handleOtherCompanyPromotion={handleOtherCompanyPromotion}
-            />
-            <PromotionStockInput
-              promotionStocks={promotionStocks}
-              handlePromotionStockChange={handlePromotionStockChange}
-            />
-          </>
+          <PromotionStockInput
+            promotionStocks={promotionStocks}
+            handlePromotionStockChange={handlePromotionStockChange}
+          />
         )}
         <p className="text-xs text-gray-600">
           ⚠️테이블 수를 수정했다면 &quot;계산하기&quot;를 눌러주세요.
@@ -326,7 +321,7 @@ export default function SaleCalculation() {
           additionalOrders={additionalOrders}
           orderSums={orderSums}
           additionalOrderSums={additionalOrderSums}
-          otherCompanyPromotions={otherCompanyPromotions}
+          otherCompanyActivities={otherCompanyActivities}
           promotionStocks={promotionStocks}
         />
       )}

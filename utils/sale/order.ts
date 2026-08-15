@@ -1,4 +1,5 @@
 import { Orders, OrderSums } from "@/utils/sale/types";
+import { orderDrinks } from "@/data/sale/order";
 
 export const getOrderSums = (orders: Orders) => {
   const orderSums: OrderSums = {};
@@ -64,3 +65,15 @@ export const transformOrdersToArray = (orders: Orders) => {
     return { name, ...rest };
   });
 };
+
+/**
+ * `2t(좋은데이) / 3t(부산갈매기) / 1t(톡톡)` 형태의 문자열을 만든다.
+ * source는 주문 한 행이거나 합계 객체 둘 다 될 수 있다. 둘 다 키가 1부터인 숫자다.
+ */
+export const formatOrderQuantities = (
+  source: { [key: number]: number | string },
+  separator: string
+) =>
+  orderDrinks
+    .map((drink, index) => `${source[index + 1] || 0}t(${drink})`)
+    .join(separator);

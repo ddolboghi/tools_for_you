@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Orders, OrderSums } from "@/utils/sale/types";
+import { formatOrderQuantities } from "@/utils/sale/order";
 import OrderInput from "./OrderInput";
 
 type OrderProps = {
@@ -39,8 +40,7 @@ export default function Order({
       </div>
       <section className="mb-4 text-sm">
         <h2 className="py-2 font-bold">
-          전환: {orderSums[1]}t(좋은데이)/{orderSums[2]}t(부산갈매기)/
-          {orderSums[3]}t(톡톡)
+          전환: {formatOrderQuantities(orderSums, "/")}
         </h2>
         <OrderInput
           orders={orders}
@@ -50,10 +50,7 @@ export default function Order({
       </section>
       <section className="mb-4 text-sm">
         <h2 className="py-2 font-bold">
-          추가주문: {additionalOrderSums[1]}t(좋은데이)/{additionalOrderSums[2]}
-          t(부산갈매기)/
-          {additionalOrderSums[3]}
-          t(톡톡)
+          추가주문: {formatOrderQuantities(additionalOrderSums, "/")}
         </h2>
         <OrderInput
           orders={additionalOrders}

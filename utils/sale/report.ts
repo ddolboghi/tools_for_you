@@ -5,7 +5,11 @@ import {
   PromotionStock,
 } from "@/utils/sale/types";
 import { getTotalOccupancyNumByCompany, getTotalTableNum } from "./calculation";
-import { getGalmegiSumByWorker, getOrderSums } from "./order";
+import {
+  formatOrderQuantities,
+  getGalmegiSumByWorker,
+  getOrderSums,
+} from "./order";
 import { getReportTitle } from "./commonReports";
 import { additionalInfoBusinessZones } from "@/utils/sale/businessZones";
 import { getSMReportRows } from "./smReport";
@@ -36,16 +40,18 @@ export const getBSKYReport = (
 ) => {
   let workerReportOfOrders = "";
   for (const order of Object.values(orders)) {
-    workerReportOfOrders += `${order[0]}: ${order[1] || 0}t(좋은데이) / ${
-      order[2] || 0
-    }t(부산갈매기) / ${order[3] || 0}t(톡톡)\n`;
+    workerReportOfOrders += `${order[0]}: ${formatOrderQuantities(
+      order,
+      " / "
+    )}\n`;
   }
 
   let workerReportOfAdditionalOrders = "";
   for (const order of Object.values(additionalOrders)) {
-    workerReportOfAdditionalOrders += `${order[0]}: ${
-      order[1] || 0
-    }t(좋은데이) / ${order[2] || 0}t(부산갈매기) / ${order[3] || 0}t(톡톡)\n`;
+    workerReportOfAdditionalOrders += `${order[0]}: ${formatOrderQuantities(
+      order,
+      " / "
+    )}\n`;
   }
 
   const orderSums = getOrderSums(orders);
@@ -77,13 +83,9 @@ ${formatOccupancySection(bskyReport)}\n
 가. 근무인원\n
 부산 갈매기 총 판매 병 수
 ${formattedGalmegiSumByWorker}\n
-나. 총 전환: ${orderSums[1] || 0}t(좋은데이) / ${
-    orderSums[2] || 0
-  }t(부산갈매기) / ${orderSums[3] || 0}t(톡톡)
+나. 총 전환: ${formatOrderQuantities(orderSums, " / ")}
 ${workerReportOfOrders}
-다. 총 추가주문: ${additionalOrderSums[1] || 0}t(좋은데이) / ${
-    additionalOrderSums[2] || 0
-  }t(부산갈매기) / ${additionalOrderSums[3] || 0}t(톡톡)
+다. 총 추가주문: ${formatOrderQuantities(additionalOrderSums, " / ")}
 ${workerReportOfAdditionalOrders}
 `;
   if (additionalInfoBusinessZones.includes(selectedBusinessZone)) {

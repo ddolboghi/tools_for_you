@@ -127,41 +127,32 @@ export default function Result({
                 <h1>{getReportTitle(selectedBusinessZone)}</h1>
                 <h2>1. 점유비</h2>
                 <p>&nbsp;&nbsp;- 총 방문업소: {totalBisness}</p>
-                <p>&nbsp;&nbsp;- 총 테이블 수: {totalTableNum}t</p>
+                <p>&nbsp;&nbsp;- 총 테이블 수: {totalTableNum}T</p>
                 <br />
                 <section>
-                  {Object.entries(bskyReport).map(
-                    ([company, occupancyReslut]) => (
-                      <div key={company}>
-                        <div className="flex flex-row items-center">
-                          <h3>{company}:&nbsp;</h3>
-                          <span>
-                            {getTotalOccupancyNumByCompany(
-                              bskyReport[company],
-                              false
-                            )}
-                            t (
-                            {getTotalOccupancyNumByCompany(
-                              bskyReport[company],
-                              true
-                            )}
-                            %)
-                          </span>
-                        </div>
-                        {Object.entries(occupancyReslut).map(
-                          ([drink, result]) => (
-                            <p key={drink}>
-                              &nbsp;&nbsp;- {drink}: {result.tables}t (
-                              {result.percentage}
-                              %)
-                            </p>
-                          )
-                        )}
-                        <br />
+                  {Object.entries(bskyReport).map(([company, occupancyReslut]) => (
+                    <div key={company}>
+                      <div className="flex flex-row items-center">
+                        <h3>{company}:&nbsp;</h3>
+                        <span>
+                          {getTotalOccupancyNumByCompany(bskyReport[company], false)}
+                          T (
+                          {getTotalOccupancyNumByCompany(bskyReport[company], true)}
+                          %)
+                        </span>
                       </div>
-                    )
-                  )}
-                  <p>마. 기타: 0t (0%)</p>
+                      {/* 주류가 하나면 회사 줄과 값이 같아 항목 줄을 생략한다. 상권 보고문과 같은 규칙이다. */}
+                      {Object.keys(occupancyReslut).length > 1 &&
+                        Object.entries(occupancyReslut).map(([drink, result]) => (
+                          <p key={drink}>
+                            &nbsp;&nbsp;- {drink}: {result.tables}T (
+                            {result.percentage}
+                            %)
+                          </p>
+                        ))}
+                      <br />
+                    </div>
+                  ))}
                 </section>
                 <br />
                 <h2>2. 전환 및 추가주문</h2>

@@ -14,10 +14,13 @@ const formatOccupancySection = (bskyReport: BskyReport) =>
       const header = `${company}: ${getTotalOccupancyNumByCompany(
         drinks,
         false
-      )}t (${getTotalOccupancyNumByCompany(drinks, true)}%)`;
+      )}T (${getTotalOccupancyNumByCompany(drinks, true)}%)`;
+      // 주류가 하나면 회사 합계와 그 주류의 값이 언제나 같아 항목 줄이 중복이다.
+      // 회사 이름이 아니라 개수로 판정하므로 나중에 주류가 늘면 저절로 맞는다.
+      if (Object.keys(drinks).length === 1) return header;
       const lines = Object.entries(drinks).map(
         ([drink, result]) =>
-          `  - ${drink}: ${result.tables}t (${result.percentage}%)`
+          `  - ${drink}: ${result.tables}T (${result.percentage}%)`
       );
       return [header, ...lines].join("\n");
     })
@@ -68,9 +71,8 @@ export const getBSKYReport = (
   let reportContent = `${getReportTitle(selectedBusinessZone)}
 1. 점유비
 \u0020\u0020- 총 방문업소: ${totalBisness}개
-\u0020\u0020- 총 테이블 수: ${getTotalTableNum(bskyReport)}t\n
+\u0020\u0020- 총 테이블 수: ${getTotalTableNum(bskyReport)}T\n
 ${formatOccupancySection(bskyReport)}\n
-마. 기타: 0t (0%)\n
 2. 전환 및 추가주문\n
 가. 근무인원\n
 부산 갈매기 총 판매 병 수

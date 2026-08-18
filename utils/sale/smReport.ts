@@ -39,7 +39,7 @@ export const getSMReportRows = (bskyReport: BskyReport): SMReportRow[] => {
     { label: "부산 : ", ...bskyReport["다. 대선주조"]["부산"] },
     { label: "진로 : ", ...bskyReport["나. 하이트진로"]["진로"] },
     { label: "참이슬 : ", ...bskyReport["나. 하이트진로"]["참이슬"] },
-    { label: "새로: ", ...bskyReport["라. 롯데"]["새로"] },
+    { label: "새로: ", ...bskyReport["라. 롯데"]["새로(살구 포함)"] },
     {
       label: "청하(별빛청하 포함): ",
       ...bskyReport["라. 롯데"]["청하(별빛청하 포함)"],

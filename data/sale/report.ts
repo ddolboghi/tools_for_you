@@ -25,7 +25,7 @@ export const bskyReport: BskyReport = {
     기타: { tables: 0, percentage: 0 },
   },
   "라. 롯데": {
-    새로: { tables: 0, percentage: 0 },
+    "새로(살구 포함)": { tables: 0, percentage: 0 },
     "청하(별빛청하 포함)": { tables: 0, percentage: 0 },
     기타: { tables: 0, percentage: 0 },
   },

@@ -6,9 +6,11 @@ import Guide from "@/components/sale/Guide";
 export default function page() {
   return (
     <>
-      <header className="flex flex-col items-center justify-center gap-2 border-b-[1px] py-2">
+      <header className="flex items-center justify-center border-b-[1px]">
         <Guide />
-        <div className="max-w-[500px] w-full px-4">
+      </header>
+      <main className="app-container">
+        <div className="max-w-[500px] w-full px-4 mt-[10px]">
           <Link
             href="https://random-bibimbap.vercel.app"
             target="_blank"
@@ -18,8 +20,6 @@ export default function page() {
             🍚 랜덤 비빔밥 만들기
           </Link>
         </div>
-      </header>
-      <main className="app-container">
         <SaleCalculation />
       </main>
       <footer className="text-center text-sm text-gray-500 py-2 bg-[#F6F8FA]">

@@ -246,27 +246,55 @@ export default function SaleCalculation() {
           handleCalculateBtn();
         }}
       >
-        {Object.entries(bskyReport).map(([company, drinks], index) => (
-          <section
-            key={`company-${index}`}
-            className="mb-4 border border-gray-300 p-2"
-          >
-            <h1 className="text-lg">{company}</h1>
-            {Object.keys(drinks).map((drink, index) => (
-              <div key={`drink-${index}`} className="mt-2">
-                <span className="pr-1">{drink}:</span>
+        {Object.entries(bskyReport).map(([company, drinks], index) => {
+          const drinkNames = Object.keys(drinks);
+          // 주류가 하나면 주류 이름이 회사 이름과 사실상 겹쳐, 제목 오른쪽에 칸을 바로 둔다.
+          // min-w-0이 필요한 이유는 이 flex 컨테이너 안에서 input이 자기 고유 폭을
+          // 줄이지 않아 좁은 화면에서 오른쪽이 잘리기 때문이다.
+          if (drinkNames.length === 1) {
+            return (
+              <section
+                key={`company-${index}`}
+                className="mb-4 border border-gray-300 p-2 flex flex-row items-center"
+              >
+                <h1 className="text-lg pr-2">{company}:</h1>
                 <input
                   type="number"
                   pattern="\d*"
-                  className="border border-gray-300 rounded p-1 w-1/2 text-black"
+                  aria-label={company}
+                  className="border border-gray-300 rounded p-1 w-1/2 min-w-0 text-black"
                   placeholder="0"
-                  onChange={(e) => handleDrink(company, drink, e.target.value)}
+                  onChange={(e) =>
+                    handleDrink(company, drinkNames[0], e.target.value)
+                  }
                 />
-                t
-              </div>
-            ))}
-          </section>
-        ))}
+                T
+              </section>
+            );
+          }
+          return (
+            <section
+              key={`company-${index}`}
+              className="mb-4 border border-gray-300 p-2"
+            >
+              <h1 className="text-lg">{company}</h1>
+              {drinkNames.map((drink, index) => (
+                <div key={`drink-${index}`} className="mt-2">
+                  <span className="pr-1">{drink}:</span>
+                  <input
+                    type="number"
+                    pattern="\d*"
+                    aria-label={`${company} ${drink}`}
+                    className="border border-gray-300 rounded p-1 w-1/2 text-black"
+                    placeholder="0"
+                    onChange={(e) => handleDrink(company, drink, e.target.value)}
+                  />
+                  T
+                </div>
+              ))}
+            </section>
+          );
+        })}
         <Order
           orders={orders}
           additionalOrders={additionalOrders}

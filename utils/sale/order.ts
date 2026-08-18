@@ -67,7 +67,7 @@ export const transformOrdersToArray = (orders: Orders) => {
 };
 
 /**
- * `2t(좋은데이) / 3t(부산갈매기) / 1t(톡톡)` 형태의 문자열을 만든다.
+ * `2T(좋은데이) / 3T(부산갈매기) / 1T(톡톡)` 형태의 문자열을 만든다.
  * source는 주문 한 행이거나 합계 객체 둘 다 될 수 있다. 둘 다 키가 1부터인 숫자다.
  */
 export const formatOrderQuantities = (
@@ -75,5 +75,5 @@ export const formatOrderQuantities = (
   separator: string
 ) =>
   orderDrinks
-    .map((drink, index) => `${source[index + 1] || 0}t(${drink})`)
+    .map((drink, index) => `${source[index + 1] || 0}T(${drink})`)
     .join(separator);
